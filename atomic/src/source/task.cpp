@@ -17,4 +17,9 @@ namespace Quant
     {
         return m_processor(data);
     }
+
+    const std::string &Task::name() const
+    {
+        return m_name;
+    }
 }

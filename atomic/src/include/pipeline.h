@@ -20,10 +20,10 @@ namespace Quant
 
     std::any process(std::any data) const override;
 
-    void add(std::unique_ptr<Task> task);
+    void add(Task task);
 
   private:
-    std::vector<std::unique_ptr<Task>> tasks;
+    std::vector<Task> tasks;
   };
 
 }
