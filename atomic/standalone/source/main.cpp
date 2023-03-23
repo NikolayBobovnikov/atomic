@@ -35,13 +35,15 @@ int main(int argc, char *argv[])
     auto configuration = config_loader.Load(options.config);
 
     // 3. construct pipeline from the configuration object
-    Pipeline<void, void> p;
+    Pipeline p(typeid(int), typeid(int));
+    p.process(0);
 
-    //p.process(void);
+    // p.process(void);
 
     // 4. process input data
   }
-  catch (exception&) {
+  catch (exception &)
+  {
     cout << "Press any key to exit" << endl;
     cin.get();
 
@@ -52,4 +54,3 @@ int main(int argc, char *argv[])
   // OK
   return 0;
 }
-
