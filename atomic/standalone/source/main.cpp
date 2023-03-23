@@ -12,6 +12,7 @@ inputs:
 #include <string>
 #include <iostream>
 #include <cxxopts.hpp>
+#include <yaml-cpp/yaml.h>
 
 
 int main(int argc, char *argv[])

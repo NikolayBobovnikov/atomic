@@ -12,10 +12,14 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 add_executable(${PipelineStadnalone} ${headers} ${sources})
 set_target_properties(${PipelineStadnalone} PROPERTIES CXX_STANDARD 17)
 target_include_directories(${PipelineStadnalone} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../src/include/")
-target_include_directories(${PipelineStadnalone} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../src/include/")
 target_link_libraries(${PipelineStadnalone} PRIVATE ${PipelineLibrary})
 
+# library for CLI options
 add_subdirectory(extern/cxxopts)
 target_include_directories(${PipelineStadnalone} PUBLIC cxxopts)
 target_link_libraries(${PipelineStadnalone} PUBLIC cxxopts)
 
+# library for YAML for storing settings configuration file
+add_subdirectory(extern/yaml-cpp)
+target_include_directories(${PipelineStadnalone} PUBLIC yaml-cpp)
+target_link_libraries(${PipelineStadnalone} PUBLIC yaml-cpp)

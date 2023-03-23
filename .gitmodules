@@ -1,3 +1,6 @@
 [submodule "atomic/standalone/extern/cxxopts"]
 	path = atomic/standalone/extern/cxxopts
 	url = https://github.com/jarro2783/cxxopts
+[submodule "atomic/standalone/extern/yaml-cpp"]
+	path = atomic/standalone/extern/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
