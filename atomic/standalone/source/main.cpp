@@ -10,38 +10,35 @@ inputs:
 */
 
 #include <string>
+#include <string_view>
 #include <iostream>
-#include <cxxopts.hpp>
 #include <yaml-cpp/yaml.h>
+#include <filesystem>
+#include "cli_options.h"
 
+using namespace std;
 
 int main(int argc, char *argv[])
 {
-    using namespace std;
+  try
+  {
+    // 1. parse CLI options
+    CLIOptions options(argc, argv);
+    cout << "Input file: " << options.input << endl;
+    cout << "Output file: " << options.output << endl;
+    cout << "Using pipeline settings: " << options.config << endl;
 
-    cxxopts::Options options("Pipeline", "Applies pipeline transformations of the input data.");
 
-    // define available options
-    options.add_options()
-        //("d,debug", "Enable debugging") // a bool parameter
-        //("i,integer", "Int param", cxxopts::value<int>())
-        ("c,config", "Pipeline settings JSON configuration file", cxxopts::value<string>())
-        ("v,verbose", "Verbose output", cxxopts::value<bool>()->default_value("false"))
-        ;
+  }
+  catch (exception&) {
+    cout << "Press any key to exit" << endl;
+    cin.get();
 
-    // parse options
-    auto result = options.parse(argc, argv);
+    // In case of exceptions return status code for failure
+    return -1;
+  }
 
-    try{
-        // get json pipeline config
-        auto pipelint = result["config"].as<string>();
-        cout << "Using settings " << pipelint << endl;
-    }
-    catch(exception& e){
-        cout << e.what() << endl;
-    }
-
-    cout << "Hello" << endl;
-    
-    return 0;
+  // OK
+  return 0;
 }
+

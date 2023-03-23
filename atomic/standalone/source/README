@@ -6,35 +6,75 @@
 • тип выходных данных (минимально необходимо реализовать типы "int", "float");
 
 
+Вопросы с вариантами разрешения, по задаче 1:
+    1. Все вычислительные задачи конвейера параметризуются одним параметром?
+      - есть комплексные задачи с набором в т.ч. нечисловых параметров
 
-QUESTIONS:
-    1. Все вычисления параметризуются одним параметром?
+    2. Инпут однородный? Т.е. тип вродных данных - общий для всех данных?
+      - исходим из однородного инпута
+
+    3. Типы входных и выходных данных - одинаковые для всех задач в конвейере?
+      - исходим из возможности разных типов у разных задач, 
+      так чтобы вх/вых типы всего конвейера соответсвовали общему требованию.
+      Пример:
+        input: float
+        output: int
+
+        task1 : float -> double
+        task2 : double -> int
+        pipeline: float -> task 1 -> task2 -> int
+
+    3. Что делать при ошибке в данных или при процессинге?
+      - пишем в output соответственно "incorrect input"/"processing error" 
+      в качестве результата для данной входной строки,
+      и продолжаем обработку входных данных
+    
+
+PLAN:
+  1. Parse CLI arguments
+  2. Reade configuration file with settings
+  3. Build tasks and compose pipeline
+      3.1 Validation of the task parameters
+      3.2 Validation of the pipeline. 
+          Each task may operate on different types of input data, and produce output data of another type.
+          task1 : float -> double
+          task2 : double -> int
+          pipeline: float -> task 1 -> task2 -> int
+  4. Process intput file
+      4.1 Strategy: line by line
+      4.2 If line is incorrect, log error to the output 
+    
 
 
 
-{
-    "input" : "float",
-    "output" : "int", // all base types?
-    "pipeline":
-    {
-        "action" : 
-        {
-            "name" : "add",
-            "numeric_parameter" : 2
-        },
-        "action" : 
-        {
-            "name" : "multiply",
-            "numeric_parameter" : 100б
-        } 
-        "action" : 
-        {
-            "name" : "integral",
-            "parameters" : 
-            {
-                "strategy" : "interpolation" // other string options
-            }
-        } 
+ # Pipeline configuration for processing input data
+ # Types of input and output data:
+ # - global, for the pipeline
+ # - local, for the task (optional)
 
-    }
-}
+- input type: float
+- output type: int
+
+- pipeline:
+    # Simple tasks with single numeric parameter. Type of parameter is associated with the task name
+    
+    - task:
+        name: multiplication
+        parameter: 10.5
+    - task:
+        # Input type of this task is deduced from the output type of the previous task
+        name : addition
+        parameter: 2
+        input type: int
+        output type: int
+
+    # Complex task with named parameters.
+    - task:
+        name: complex task
+        parameters:
+            - parameter:
+                name: strategy
+                value: interpolation
+            - parameter:
+                name: precision
+                value: 0.01

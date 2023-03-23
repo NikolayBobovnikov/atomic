@@ -1,0 +1,31 @@
+ # Pipeline configuration for processing input data
+ # Types of input and output data:
+ # - global, for the pipeline
+ # - local, for the task (optional)
+
+- input type: float
+- output type: int
+
+- pipeline:
+    # Simple tasks with single numeric parameter. Type of parameter is associated with the task name
+    
+    - task:
+        name: multiplication
+        parameter: 10.5
+    - task:
+        # Input type of this task is deduced from the output type of the previous task
+        name : addition
+        parameter: 2
+        input type: int
+        output type: int
+
+    # Complex task with named parameters.
+    - task:
+        name: complex task
+        parameters:
+            - parameter:
+                name: strategy
+                value: interpolation
+            - parameter:
+                name: precision
+                value: 0.01
