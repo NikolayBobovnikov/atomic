@@ -14,3 +14,8 @@ set_target_properties(${PipelineStadnalone} PROPERTIES CXX_STANDARD 17)
 target_include_directories(${PipelineStadnalone} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../src/include/")
 target_include_directories(${PipelineStadnalone} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../src/include/")
 target_link_libraries(${PipelineStadnalone} PRIVATE ${PipelineLibrary})
+
+add_subdirectory(extern/cxxopts)
+target_include_directories(${PipelineStadnalone} PUBLIC cxxopts)
+target_link_libraries(${PipelineStadnalone} PUBLIC cxxopts)
+
