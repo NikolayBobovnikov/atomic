@@ -9,6 +9,7 @@
 #include <exception>
 #include <string>
 #include "pipeline.h"
+#include "task.h"
 
 using namespace std;
 namespace
@@ -17,6 +18,11 @@ namespace
 }
 namespace Quant
 {
+
+  Pipeline::Pipeline(const std::type_info &input_type, const std::type_info &output_type)
+      : IProcessor(input_type, output_type)
+  {
+  }
 
   std::any Pipeline::process(std::any data) const
   {
@@ -61,11 +67,4 @@ namespace Quant
     }
     tasks.push_back(std::move(task));
   }
-
-  const std::string &Pipeline::name() const
-  {
-    static const string name = "pipeline";
-    return name;
-  }
-
 }
