@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
     catch(exception& e){
         cout << e.what() << endl;
     }
+
+    cout << "Hello" << endl;
     
     return 0;
 }

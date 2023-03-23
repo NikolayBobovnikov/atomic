@@ -11,8 +11,17 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 # ---- Standalone executable ----
 add_executable(${PipelineStadnalone} ${headers} ${sources})
 set_target_properties(${PipelineStadnalone} PROPERTIES CXX_STANDARD 17)
-target_include_directories(${PipelineStadnalone} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../src/include/")
 target_link_libraries(${PipelineStadnalone} PRIVATE ${PipelineLibrary})
+target_include_directories(${PipelineStadnalone} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../src/include/")
+target_include_directories(${PipelineStadnalone} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/extern/")
+
+# Update library submodules
+find_package(Git)
+if(Git_FOUND)
+  message("Git found: ${GIT_EXECUTABLE}")
+  execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive OUTPUT_VARIABLE GIT_OUTPUT)
+  message("Initializing git submodules: ${GIT_OUTPUT}")
+endif()
 
 # library for CLI options
 add_subdirectory(extern/cxxopts)
