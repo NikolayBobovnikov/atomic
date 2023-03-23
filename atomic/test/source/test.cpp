@@ -4,7 +4,7 @@
 #include "pipeline.h"
 #include <iostream>
 
-using namespace Pipeline;
+using namespace Quant;
 
 /*
 TEST_CASE("Default value")
