@@ -15,8 +15,10 @@ inputs:
 #include <filesystem>
 #include "cli_options.h"
 #include "pipeline_config_loader.h"
+#include "pipeline.h"
 
 using namespace std;
+using namespace Quant;
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +35,9 @@ int main(int argc, char *argv[])
     auto configuration = config_loader.Load(options.config);
 
     // 3. construct pipeline from the configuration object
+    Pipeline<void, void> p;
+
+    //p.process(void);
 
     // 4. process input data
   }
