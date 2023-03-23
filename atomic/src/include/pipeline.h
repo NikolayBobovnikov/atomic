@@ -13,7 +13,7 @@
 #include "processor.h"
 namespace Quant
 {
-  struct Pipeline : IProcessor
+  struct Pipeline : ProcessorBase
   {
     Pipeline(const std::type_info &input_type, const std::type_info &output_type);
     ~Pipeline() = default;

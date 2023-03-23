@@ -20,7 +20,7 @@ namespace Quant
 {
 
   Pipeline::Pipeline(const std::type_info &input_type, const std::type_info &output_type)
-      : IProcessor(input_type, output_type)
+      : ProcessorBase(input_type, output_type)
   {
   }
 
