@@ -12,9 +12,9 @@ inputs:
 #include <string>
 #include <string_view>
 #include <iostream>
-#include <yaml-cpp/yaml.h>
 #include <filesystem>
 #include "cli_options.h"
+#include "pipeline_config_loader.h"
 
 using namespace std;
 
@@ -28,7 +28,13 @@ int main(int argc, char *argv[])
     cout << "Output file: " << options.output << endl;
     cout << "Using pipeline settings: " << options.config << endl;
 
+    // 2. parse pipeline configuration settings
+    PipelineConfigLoader config_loader;
+    auto configuration = config_loader.Load(options.config);
 
+    // 3. construct pipeline from the configuration object
+
+    // 4. process input data
   }
   catch (exception&) {
     cout << "Press any key to exit" << endl;

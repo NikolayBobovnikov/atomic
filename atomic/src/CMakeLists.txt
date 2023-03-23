@@ -16,7 +16,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 # ---- Create library ----
 
-add_library(${PipelineLibrary} ${headers} ${sources})
+add_library(${PipelineLibrary} ${headers} ${sources} "include/pipeline_config.h" "source/pipeline_config.cpp")
 set_target_properties(${PipelineLibrary} PROPERTIES CXX_STANDARD 17)
 
 # being a cross-platform target, we enforce standards conformance on MSVC
