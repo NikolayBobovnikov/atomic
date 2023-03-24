@@ -3,37 +3,40 @@
 
 namespace Quant
 {
-    namespace Tasks
+  namespace Tasks
+  {
+    struct LightItem
     {
-      struct LightItem {};
-      struct HeavyItem {};
+    };
+    struct HeavyItem
+    {
+    };
 
-
-      template<class InputType, class OutputType>
-      struct Add final : IProcessor, IParametrized
+    template <class InputType, class OutputType>
+    struct Add final : IProcessor, IParametrized
+    {
+      data_t process(data_t data) const override
       {
-        data_t process(data_t data) const override
-        {
-          InputType in = std::get<InputType>(data);
-          OutputType out;
+        // verify input data type
+        InputType in = std::get<InputType>(data);
+        OutputType out = std::visit(overload{
+                                        [](const std::string &s) -> OutputType
+                                        { return OutputType(); },
+                                        [in](auto param_value) -> OutputType
+                                        { return param_value + in; },
+                                    },
+                                    m_parameter);
 
-          //std::visit(overload{
-          //  //[](LightItem&, LightItem&) { },
-          //  //[](LightItem&, HeavyItem&) { },
-          //  //[](HeavyItem&, LightItem&) { },
-          //  [](auto a, auto b) { return a + b; },
-          //}, data, m_parameter);
+        return out;
+      }
 
-          return out;
-        }
+      void set_parameters(TaskParameters params) override
+      {
+        m_parameter = params.args[0];
+      }
 
-        void set_parameters(TaskParameters params) override
-        {
-          m_parameter = params.args[0];
-        }
-
-      private:
-        data_t m_parameter;
-      };
-    }
+    private:
+      data_t m_parameter;
+    };
+  }
 }
