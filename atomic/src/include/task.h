@@ -8,6 +8,7 @@
 #include <memory>
 #include "task.h"
 #include "processor.h"
+#include "variant_helper.h"
 
 namespace Quant
 {
