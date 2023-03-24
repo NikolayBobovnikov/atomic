@@ -42,7 +42,8 @@ int main(int argc, char *argv[])
     params.args.push_back(1234);
 
     p.add(typeid(int), typeid(int), "add", params);
-    p.process(0);
+    auto res = p.process(1);
+    cout << "result" << std::get<int>(res) << endl;
 
     // p.process(void);
 

@@ -19,6 +19,7 @@ namespace Quant
     ~Pipeline() = default;
 
     data_t process(data_t data) const override;
+    data_out_t process_ext(data_t data) const;
 
     void add(std::unique_ptr<Task> task);
     void add(const std::type_info &input_type,

@@ -28,34 +28,33 @@ namespace Quant
 
   data_t Pipeline::process(data_t data) const
   {
-    // pass data by reference to the task with checking errors
-    auto checked_transformation = [&data](const std::unique_ptr<Task>& task)
-    {
-      try
-      {
-        data = task->process(data);
-      }
-      catch (exception &e)
-      {
-        // catch, log, rethrow to be processed in pipeline
-        return data_t("Error in task: " + task->name() + ". " + e.what());
-      }
+    // modify copy of input data at each step
+    auto process_data = [&data](const std::unique_ptr<Task> &task)
+    { data = task->process(data); };
 
-      return data;
-    };
+    // run pipeline
+    for_each(cbegin(tasks), cend(tasks), process_data);
+
+    return data;
+  }
+
+  data_out_t Pipeline::process_ext(data_t data) const
+  {
+    data_out_t result;
 
     // run pipeline
     try
     {
-      for_each(cbegin(tasks), cend(tasks), checked_transformation);
+      // return result of the pipeline by default
+      result = variant_cast(process(data));
     }
     catch (exception &e)
     {
       // return error message in case of errors
-      return data_t(e.what());
+      result = e.what();
     }
 
-    return data;
+    return result;
   }
 
   void Pipeline::add(unique_ptr<Task> task)
@@ -70,10 +69,10 @@ namespace Quant
     tasks.push_back(move(task));
   }
 
-  void Pipeline::add(const std::type_info& input_type,
-    const type_info& output_type,
-    string task_name,
-    TaskParameters task_params)
+  void Pipeline::add(const std::type_info &input_type,
+                     const type_info &output_type,
+                     string task_name,
+                     TaskParameters task_params)
   {
     // first task must have the same input type as pipeline
     if (tasks.size() == 0 && this->input_type() != std::type_index(input_type))

@@ -1,43 +1,48 @@
 #pragma once
 
 #include <string>
-#include <variant>
 #include <typeinfo>
 #include <typeindex>
 #include <vector>
+#include "variant_helper.h"
 #include <unordered_map>
 
 namespace Quant
 {
-    // supported data types; string for logging error messages in the output inplace
-    using data_t = std::variant<int, size_t, float, double, std::string>; 
+  // supported data types; string for logging error messages in the output inplace
+  using data_t = std::variant<int, size_t, float, double>;
 
-    // main interface for the pipeline and tasks
-    struct IProcessor
-    {
-      virtual data_t process(data_t) const = 0;
-      virtual ~IProcessor() = default;
-    };
+  // using data_out_t = variant_append<data_t, std::string>;
+  using data_out_t = std::variant<int, size_t, float, double, std::string>;
 
-    struct TaskParameters {
-      std::vector<data_t> args;
-      std::unordered_map<std::string, data_t> kwargs;
-    };
+  // main interface for the pipeline and tasks
+  struct IProcessor
+  {
+    virtual data_t process(data_t) const = 0;
+    virtual ~IProcessor() = default;
+  };
 
-    struct IParametrized {
-      virtual ~IParametrized() = default;
-      virtual void set_parameters(TaskParameters params) = 0;
-    };
+  struct TaskParameters
+  {
+    std::vector<data_t> args;
+    std::unordered_map<std::string, data_t> kwargs;
+  };
 
-    // parametrize by input and output types
-    struct ProcessorBase : IProcessor
-    {
-      ProcessorBase(const std::type_info& input_type, const std::type_info& output_type);
-      std::type_index input_type() const;
-      std::type_index output_type() const;
+  struct IParametrized
+  {
+    virtual ~IParametrized() = default;
+    virtual void set_parameters(TaskParameters params) = 0;
+  };
 
-    private:
-      const std::type_index m_input_type;
-      const std::type_index m_output_type;
-    };
+  // parametrize by input and output types
+  struct ProcessorBase : IProcessor
+  {
+    ProcessorBase(const std::type_info &input_type, const std::type_info &output_type);
+    std::type_index input_type() const;
+    std::type_index output_type() const;
+
+  private:
+    const std::type_index m_input_type;
+    const std::type_index m_output_type;
+  };
 }
