@@ -8,6 +8,7 @@
 #include <typeindex>
 #include <exception>
 #include <string>
+#include <algorithm>
 #include "pipeline.h"
 #include "task.h"
 
