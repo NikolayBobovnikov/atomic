@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <functional>
-#include <any>
+#include <variant>
 #include <typeinfo>
 #include <typeindex>
 #include <exception>
@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "pipeline.h"
 #include "task.h"
+#include "task_factory.h"
 
 using namespace std;
 namespace
@@ -25,7 +26,7 @@ namespace Quant
   {
   }
 
-  std::any Pipeline::process(std::any data) const
+  data_t Pipeline::process(data_t data) const
   {
     // pass data by reference to the task with checking errors
     auto checked_transformation = [&data](const std::unique_ptr<Task>& task)
@@ -37,7 +38,7 @@ namespace Quant
       catch (exception &e)
       {
         // catch, log, rethrow to be processed in pipeline
-        return std::any("Error in task: " + task->name() + ". " + e.what());
+        return data_t("Error in task: " + task->name() + ". " + e.what());
       }
 
       return data;
@@ -51,7 +52,7 @@ namespace Quant
     catch (exception &e)
     {
       // return error message in case of errors
-      return std::any(e.what());
+      return data_t(e.what());
     }
 
     return data;
@@ -66,6 +67,21 @@ namespace Quant
     {
       throw invalid_argument("Incompatible task input type. Expected ");
     }
+    tasks.push_back(move(task));
+  }
+
+  void Pipeline::add(const std::type_info& input_type,
+    const type_info& output_type,
+    string task_name,
+    TaskParameters task_params)
+  {
+    // first task must have the same input type as pipeline
+    if (tasks.size() == 0 && this->input_type() != std::type_index(input_type))
+    {
+      throw invalid_argument("Incompatible task input type. Expected ");
+    }
+
+    auto task = TaskFactory::Create(input_type, output_type, task_name, task_params);
     tasks.push_back(move(task));
   }
 }

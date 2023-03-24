@@ -22,6 +22,7 @@ using namespace Quant;
 
 int main(int argc, char *argv[])
 {
+
   try
   {
     // 1. parse CLI options
@@ -36,6 +37,11 @@ int main(int argc, char *argv[])
 
     // 3. construct pipeline from the configuration object
     Pipeline p(typeid(int), typeid(int));
+
+    TaskParameters params;
+    params.args.push_back(1234);
+
+    p.add(typeid(int), typeid(int), "add", params);
     p.process(0);
 
     // p.process(void);

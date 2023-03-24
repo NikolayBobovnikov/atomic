@@ -48,6 +48,8 @@ CLIOptions::CLIOptions(int argc, char* argv[])
   }
   catch (exception& e) {
     cout << "Error in command line arguments: " << e.what() << endl;
-    throw;
+    
+    // TODO
+    //throw;
   }
 }

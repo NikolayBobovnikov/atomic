@@ -54,7 +54,9 @@ PipelineConfiguration PipelineConfigLoader::Load(const std::filesystem::path& pa
   }
   catch (exception& e) {
     cout << "Error in pipeline configuration settings: " << e.what() << endl;
-    throw;
+    
+    // TODO
+    //throw;
   }
 
   return configuration;
