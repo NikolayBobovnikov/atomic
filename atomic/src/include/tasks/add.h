@@ -1,3 +1,4 @@
+#include <any>
 #include "task.h"
 
 namespace Quant
@@ -6,12 +7,13 @@ namespace Quant
     {
         struct Add final : ProcessorBase
         {
-            // Add(const std::type_info &input_type,
-            //     const std::type_info &output_type,
-            //     const std::string &name)
-            //     : Task(input_type, output_type, name)
-            // {
-            // }
+            Add(const std::type_info &input_type,
+                const std::type_info &output_type,
+                std::string name,
+                std::any parameter)
+                : Task(input_type, output_type, name), m_parameter(parameter)
+            {
+            }
 
             virtual std::any process(std::any data) const override
             {
@@ -19,7 +21,7 @@ namespace Quant
             }
 
         private:
-            std::any parameter;
+            std::any m_parameter;
         }
     }
 }
