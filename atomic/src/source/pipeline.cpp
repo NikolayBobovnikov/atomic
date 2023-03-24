@@ -36,7 +36,7 @@ namespace Quant
       catch (exception &e)
       {
         // catch, log, rethrow to be processed in pipeline
-        return std::any("Error in task: " + task.name() + ". " + e.what());
+        return std::any("Error in task: " + task.name_str() + ". " + e.what());
       }
 
       return data;

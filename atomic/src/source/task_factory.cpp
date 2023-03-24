@@ -1,10 +1,10 @@
-
+#include <exception>
 #include "task_factory.h"
 
+using namespace std;
 namespace Quant
 {
-    Task TaskFactory::Create()
+    void TaskFactory::Create()
     {
-        return Task();
-    }
+        }
 }

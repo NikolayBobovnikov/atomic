@@ -24,10 +24,16 @@
         task2 : double -> int
         pipeline: float -> task 1 -> task2 -> int
 
-    3. Что делать при ошибке в данных или при процессинге?
+    4. Что делать при ошибке в данных или при процессинге?
       - пишем в output соответственно "incorrect input"/"processing error" 
       в качестве результата для данной входной строки,
       и продолжаем обработку входных данных
+
+
+NOTES:
+  1. Processing of i-th and j-th data items is independent, can and should be parallelized
+  2. Plugin system for task management
+  3.  
     
 
 PLAN:
@@ -59,7 +65,7 @@ PLAN:
     # Simple tasks with single numeric parameter. Type of parameter is associated with the task name
     
     - task:
-        name: multiplication
+        name: multiply_to_float
         parameter: 10.5
     - task:
         # Input type of this task is deduced from the output type of the previous task
