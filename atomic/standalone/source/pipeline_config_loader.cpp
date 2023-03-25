@@ -11,53 +11,83 @@ using namespace std;
 
 - pipeline:
     - task:
-        name: square root
+        name: multiply
         output type: double
     - task:
-        name : addition
-        parameter: 10.5
+        name : add
+        args: [10.5]
     - task:
         name: complex task
-        parameters:
-            - parameter:
+        args: [10.4, 5]
+        kwargs:
+            - kwarg:
                 name: strategy
                 value: interpolation
-            - parameter:
+            - kwarg:
                 name: precision
                 value: 0.01
 */
 
-namespace {
+namespace
+{
+  // YAML settings keywords
   static const string input_type = "input type";
   static const string output_type = "output type";
-  static const string tasks = "tasks";
+  static const string pipeline = "pipeline";
   static const string task = "task";
+  static const string args = "args";
+  static const string kwargs = "kwargs";
   static const string name = "name";
-  static const string parameters = "parameters";
-  static const string parameter = "parameter";
+  static const string value = "value";
+
+  namespace
+  {
+    PipelineSettings load(const std::filesystem::path &path_to_config)
+    {
+      PipelineSettings settings;
+
+      YAML::Node yaml = YAML::LoadFile(path_to_config.string());
+
+      settings.input_type = yaml[input_type].as<string>();
+      settings.output_type = yaml[output_type].as<string>();
+
+      for (const auto &task : yaml[pipeline])
+      {
+        // add task
+        settings.tasks.emplace_back(task[name].as<string>(), task[input_type].as<string>(), task[output_type].as<string>());
+        auto &added_task = settings.tasks.back();
+
+        // fill unnamed arguments
+        for (const auto &targ : task[args])
+        {
+          added_task.args.push_back(targ.as<string>());
+        }
+
+        // fill named arguments
+        for (const auto &tkwarg : task[args])
+        {
+          added_task.kwargs[tkwarg[name].as<string>()] = tkwarg[value].as<string>();
+        }
+      }
+
+      return settings;
+    }
+  }
 }
 
-PipelineConfiguration PipelineConfigLoader::Load(const std::filesystem::path& path_to_config)
+PipelineSettings PipelineSettingsLoader::Load(const std::filesystem::path &path_to_config)
 {
-  PipelineConfiguration configuration;
+  PipelineSettings settings;
 
-  try {
-    if (!filesystem::is_regular_file(path_to_config)) {
-      throw invalid_argument("Configuration file does not exist");
-    }
-
-    YAML::Node config = YAML::LoadFile(path_to_config.string());
-
-    if (config[input_type]) {
-      std::cout << "Last logged in: " << config[input_type].as<string>() << endl;
-    }
+  try
+  {
+    settings = load(path_to_config);
   }
-  catch (exception& e) {
+  catch (exception &e)
+  {
     cout << "Error in pipeline configuration settings: " << e.what() << endl;
-    
-    // TODO
-    //throw;
+    throw;
   }
 
-  return configuration;
+  return settings;
 }

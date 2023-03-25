@@ -1,6 +1,9 @@
 #include <filesystem>
-#include "pipeline_config.h"
+#include "settings.h"
 
-struct PipelineConfigLoader {
-  PipelineConfiguration Load(const std::filesystem::path&);
+using namespace Quant;
+
+struct PipelineSettingsLoader
+{
+  PipelineSettings Load(const std::filesystem::path &);
 };

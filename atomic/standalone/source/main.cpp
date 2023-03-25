@@ -32,8 +32,8 @@ int main(int argc, char *argv[])
     cout << "Using pipeline settings: " << options.config << endl;
 
     // 2. parse pipeline configuration settings
-    PipelineConfigLoader config_loader;
-    auto configuration = config_loader.Load(options.config);
+    PipelineSettingsLoader settings_loader;
+    auto settings = settings_loader.Load(options.config);
 
     // 3. construct pipeline from the configuration object
     Pipeline p(typeid(int), typeid(int));

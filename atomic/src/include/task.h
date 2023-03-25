@@ -3,13 +3,13 @@
 #include <string>
 #include <memory>
 #include "processor.h"
-#include "data_type_info.h"
-#include "data_type_checker.h"
+#include "io_type_info.h"
+#include "io_type_checker.h"
 
 namespace Quant
 {
   struct TaskProcessor;
-  struct Task : IProcessor, IOTypeInfo, IOTypeChecker
+  struct Task : IOTypeInfo, IProcessor, IOTypeChecker
   {
     Task(const std::type_info &input_type,
          const std::type_info &output_type,

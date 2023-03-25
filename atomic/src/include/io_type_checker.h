@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "data_types.h"
+#include "io_types.h"
 
 namespace Quant
 {

@@ -5,7 +5,7 @@
 #include <string>
 #include "parameters.h"
 #include "processor.h"
-#include "data_type_info.h"
+#include "io_type_info.h"
 
 namespace Quant
 {
