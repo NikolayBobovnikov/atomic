@@ -12,6 +12,47 @@
 
 namespace Quant
 {
+  struct ICheckType
+  {
+    virtual void check(data_t data) const = 0;
+  };
+
+  template <class T>
+  struct CheckType : ICheckType
+  {
+    using type = T;
+
+    // throw if data_t doesn't contain T
+    void check(data_t data) const override
+    {
+      std::get<T>(data);
+    }
+  };
+
+  struct IInOut
+  {
+    IInOut(std::unique_ptr<ICheckType> in, std::unique_ptr<ICheckType> out)
+        : m_in(std::move(in)), m_out(std::move(out))
+    {
+    }
+
+    virtual ~IInOut() = default;
+
+    void check_input(data_t data) const
+    {
+      return m_in->check(data);
+    }
+
+    void check_output(data_t data) const
+    {
+      return m_out->check(data);
+    }
+
+  private:
+    std::unique_ptr<ICheckType> m_in;
+    std::unique_ptr<ICheckType> m_out;
+  };
+
   struct Task : ProcessorBase
   {
     Task(const std::type_info &input_type,

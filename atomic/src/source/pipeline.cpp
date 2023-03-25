@@ -38,7 +38,7 @@ namespace Quant
     return data;
   }
 
-  data_out_t Pipeline::process_ext(data_t data) const
+  data_out_t Pipeline::process_ext(data_t data) const noexcept
   {
     data_out_t result;
 

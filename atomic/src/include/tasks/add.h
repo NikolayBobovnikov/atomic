@@ -5,28 +5,31 @@ namespace Quant
 {
   namespace Tasks
   {
-    struct LightItem
+    struct Add final : IProcessor,
+                       IParametrized,
+                       IInOut
     {
-    };
-    struct HeavyItem
-    {
-    };
+      // TODO: move to builder function
+      Add(std::unique_ptr<ICheckType> in, std::unique_ptr<ICheckType> out)
+          : IInOut(std::move(in), std::move(out))
+      {
+      }
 
-    template <class InputType, class OutputType>
-    struct Add final : IProcessor, IParametrized
-    {
       data_t process(data_t data) const override
       {
+        // TODO: move to outer class
         // verify input data type
-        InputType in = std::get<InputType>(data);
-        OutputType out = std::visit(overload{
-                                        [](const std::string &s) -> OutputType
-                                        { return OutputType(); },
-                                        [in](auto param_value) -> OutputType
-                                        { return param_value + in; },
-                                    },
-                                    m_parameter);
+        check_input(data);
 
+        // TODO: leave in this (strategy) class, define interface
+        data_t out = std::visit(overload{
+                                    [](auto input, auto param_value) -> data_t
+                                    { return input + param_value; },
+                                },
+                                data, m_parameter);
+
+        // TODO: move to base class
+        check_output(out);
         return out;
       }
 
