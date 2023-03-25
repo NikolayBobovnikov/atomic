@@ -1,32 +1,9 @@
 #include <exception>
 #include <iostream>
 #include <yaml-cpp/yaml.h>
-#include "pipeline_config_loader.h"
+#include "settings_loader.h"
 
 using namespace std;
-
-/*
-- input type: float
-- output type: int
-
-- pipeline:
-    - task:
-        name: multiply
-        output type: double
-    - task:
-        name : add
-        args: [10.5]
-    - task:
-        name: complex task
-        args: [10.4, 5]
-        kwargs:
-            - kwarg:
-                name: strategy
-                value: interpolation
-            - kwarg:
-                name: precision
-                value: 0.01
-*/
 
 namespace
 {
@@ -85,18 +62,12 @@ namespace
 
       YAML::Node yaml = YAML::LoadFile(path_to_config.string());
 
-      // auto node = yaml[input_type];
-      // auto type = node.Type();
-      // cout << node.Type() << endl;
-
       settings.input_type = yaml[input_type].as<std::string>();
       settings.output_type = yaml[output_type].as<std::string>();
 
       for (const auto &task : yaml[pipeline])
       {
         Task task_settings;
-        match_type(task);
-
         task_settings.name = task[name].as<string>();
         task_settings.input_type = task[input_type].as<string>();
         task_settings.output_type = task[output_type].as<string>();

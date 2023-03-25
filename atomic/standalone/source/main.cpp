@@ -14,7 +14,7 @@ inputs:
 #include <iostream>
 #include <filesystem>
 #include "cli_options.h"
-#include "pipeline_config_loader.h"
+#include "settings_loader.h"
 #include "pipeline.h"
 #include "pipeline_factory.h"
 

@@ -9,7 +9,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 
 # ---- Standalone executable ----
-add_executable(${PipelineStadnalone} ${headers} ${sources} "include/cli_options.h" "source/cli_options.cpp" "include/pipeline_config_loader.h" "source/pipeline_config_loader.cpp")
+add_executable(${PipelineStadnalone} ${headers} ${sources} )
 set_target_properties(${PipelineStadnalone} PROPERTIES CXX_STANDARD 17)
 target_link_libraries(${PipelineStadnalone} PRIVATE ${PipelineLibrary})
 target_include_directories(${PipelineStadnalone} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../src/include/")

@@ -5,31 +5,29 @@
 
 ---
 
-input type: "float"
-output type: "int"
+input type: float
+output type: int
 pipeline:
-  - task:
-      name: "multiply"
-      input type: "int"
-      output type: "int"
-      args:
-        - arg:
-            type: "int"
-            value: 2
-  - task:
-      name: "add"
-      input type: "int"
-      output type: "float"
-      args:
-        - arg:
-            type: "float"
-            value: 0.5
-  - task:
-      name: "complex task"
-      input type: "float"
-      output type: "int"
-      kwargs:
-        - kwarg:
-            name: "strategy"
-            type: "string"
-            value: "interpolation"
+  - name: multiply
+    input type: int
+    output type: int
+    args:
+      - type: int
+        value: 2
+      
+  - name: add
+    input type: int
+    output type: float
+    args:
+      - type: float
+        value: 0.5
+          
+  - name: complex task
+    input type: float
+    output type: int
+    kwargs:
+      - name: strategy
+        type: string
+        value: interpolation
+            
+      
