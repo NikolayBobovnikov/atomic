@@ -38,10 +38,14 @@ int main(int argc, char *argv[])
     // 3. construct pipeline from the configuration object
     Pipeline p(typeid(int), typeid(int));
 
-    TaskParameters params;
-    params.args.push_back(1234);
+    // test: multiply by 2 and add 0.5
+    TaskParameters mul_param;
+    TaskParameters add_param;
+    mul_param.add(2);
+    add_param.add(0.5);
+    p.add_task(typeid(int), typeid(int), "multiply", mul_param);
+    p.add_task(typeid(int), typeid(float), "add", add_param);
 
-    p.add(typeid(int), typeid(int), "add", params);
     auto res = p.process(1);
     cout << "result" << std::get<int>(res) << endl;
 
