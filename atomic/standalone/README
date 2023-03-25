@@ -60,27 +60,29 @@ PLAN:
 
 - input type: float
 - output type: int
-
 - pipeline:
-    # Simple tasks with single numeric parameter. Type of parameter is associated with the task name
-    
     - task:
-        name: multiply_to_float
-        parameter: 10.5
-    - task:
-        # Input type of this task is deduced from the output type of the previous task
-        name : addition
-        parameter: 2
+        name: multiply
         input type: int
         output type: int
-
-    # Complex task with named parameters.
+        args:
+          - arg:
+              type: int
+              value: 2
+    - task:
+        name : add
+        input type: int
+        output type: int
+        args:
+          - arg:
+              type: float
+              value: 0.5
+              
+    # Complex task with named parameters (TODO)
     - task:
         name: complex task
-        parameters:
-            - parameter:
+        kwargs:
+            - kwarg:
                 name: strategy
+                type: string
                 value: interpolation
-            - parameter:
-                name: precision
-                value: 0.01

@@ -4,7 +4,6 @@
 #include <vector>
 #include <unordered_map>
 #include "io_types.h"
-
 namespace Quant
 {
     struct TaskParameters

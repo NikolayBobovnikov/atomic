@@ -38,6 +38,7 @@ namespace
   static const string args = "args";
   static const string kwargs = "kwargs";
   static const string name = "name";
+  static const string type = "type";
   static const string value = "value";
 
   namespace
@@ -62,13 +63,13 @@ namespace
         // fill unnamed arguments
         for (const auto &targ : task[args])
         {
-          task_settings.args.push_back(targ.as<string>());
+          task_settings.args.push_back({targ[type].as<string>(), targ[value].as<string>()});
         }
 
         // fill named arguments
         for (const auto &tkwarg : task[args])
         {
-          task_settings.kwargs[tkwarg[name].as<string>()] = tkwarg[value].as<string>();
+          task_settings.kwargs[tkwarg[name].as<string>()] = {tkwarg[type].as<string>(), tkwarg[value].as<string>()};
         }
 
         settings.tasks.push_back(task_settings);
