@@ -13,7 +13,7 @@
 
 namespace Quant
 {
-  struct Task : ProcessorBase
+  struct Task : IProcessor, DataTypeInfo
   {
     Task(const std::type_info &input_type,
          const std::type_info &output_type,

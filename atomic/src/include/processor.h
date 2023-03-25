@@ -35,9 +35,9 @@ namespace Quant
   };
 
   // parametrize by input and output types
-  struct ProcessorBase : IProcessor, IODataTypeChecker, IParametrized
+  struct DataTypeInfo
   {
-    ProcessorBase(const std::type_info &input_type, const std::type_info &output_type);
+    DataTypeInfo(const std::type_info &input_type, const std::type_info &output_type);
     std::type_index input_type() const;
     std::type_index output_type() const;
 
