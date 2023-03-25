@@ -5,6 +5,6 @@ namespace Quant
 {
     struct TaskParametersFactory
     {
-        static TaskParameters Create(TaskSettings);
+        static TaskParameters Create(Settings::Task);
     };
 }

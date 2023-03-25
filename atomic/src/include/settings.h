@@ -7,24 +7,34 @@
 
 namespace Quant
 {
-    struct TaskArgument
+    namespace Settings
     {
-        std::string type;
-        std::string value;
-    };
-    struct TaskSettings
-    {
-        std::string name;
-        std::string input_type;
-        std::string output_type;
-        std::vector<TaskArgument> args;
-        std::unordered_map<std::string, TaskArgument> kwargs;
-    };
+        struct Arg
+        {
+            std::string type;
+            std::string value;
+        };
+        struct KWArg
+        {
+            std::string name;
+            std::string type;
+            std::string value;
+        };
+        struct Task
+        {
+            std::string name;
+            std::string input_type;
+            std::string output_type;
+            std::vector<Arg> args;
+            std::vector<KWArg> kwargs;
+        };
 
-    struct PipelineSettings
-    {
-        std::string input_type;
-        std::string output_type;
-        std::vector<TaskSettings> tasks;
-    };
+        struct Pipeline
+        {
+            std::string input_type;
+            std::string output_type;
+            std::vector<Task> tasks;
+        };
+    }
+
 }

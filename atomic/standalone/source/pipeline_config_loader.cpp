@@ -43,19 +43,60 @@ namespace
 
   namespace
   {
-    PipelineSettings load(const std::filesystem::path &path_to_config)
+    using namespace Quant::Settings;
+
+    void match_type(const YAML::Node &node)
     {
-      PipelineSettings settings;
+      switch (node.Type())
+      {
+      case YAML::NodeType::Null:
+      {
+        break;
+      }
+      case YAML::NodeType::Scalar:
+      {
+        break;
+      }
+      case YAML::NodeType::Sequence:
+      {
+        for (auto s : task)
+        {
+          auto a = s;
+        }
+        break;
+      }
+      case YAML::NodeType::Map:
+      {
+        for (auto n : node)
+        {
+          auto first = n.first;
+          auto second = n.second;
+          auto key = first.as<string>();
+          // auto s2 = second.as<string>();
+        }
+        break;
+      }
+      }
+    }
+
+    Pipeline load(const std::filesystem::path &path_to_config)
+    {
+      Pipeline settings;
 
       YAML::Node yaml = YAML::LoadFile(path_to_config.string());
 
-      settings.input_type = yaml[input_type].as<string>();
-      settings.output_type = yaml[output_type].as<string>();
+      // auto node = yaml[input_type];
+      // auto type = node.Type();
+      // cout << node.Type() << endl;
+
+      settings.input_type = yaml[input_type].as<std::string>();
+      settings.output_type = yaml[output_type].as<std::string>();
 
       for (const auto &task : yaml[pipeline])
       {
-        // add task
-        TaskSettings task_settings;
+        Task task_settings;
+        match_type(task);
+
         task_settings.name = task[name].as<string>();
         task_settings.input_type = task[input_type].as<string>();
         task_settings.output_type = task[output_type].as<string>();
@@ -67,9 +108,9 @@ namespace
         }
 
         // fill named arguments
-        for (const auto &tkwarg : task[args])
+        for (const auto &tkwarg : task[kwargs])
         {
-          task_settings.kwargs[tkwarg[name].as<string>()] = {tkwarg[type].as<string>(), tkwarg[value].as<string>()};
+          // task_settings.kwargs[tkwarg[name].as<string>()] = {tkwarg[type].as<string>(), tkwarg[value].as<string>()};
         }
 
         settings.tasks.push_back(task_settings);
@@ -80,9 +121,9 @@ namespace
   }
 }
 
-PipelineSettings PipelineSettingsLoader::Load(const std::filesystem::path &path_to_config)
+Pipeline PipelineSettingsLoader::Load(const std::filesystem::path &path_to_config)
 {
-  PipelineSettings settings;
+  Pipeline settings;
 
   try
   {

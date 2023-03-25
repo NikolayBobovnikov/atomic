@@ -6,18 +6,13 @@
 
 using namespace std;
 
-namespace
-{
-    using namespace Quant;
-
-}
-
 namespace Quant
 {
     using namespace std;
+
     PipelineFactory::~PipelineFactory() = default;
 
-    unique_ptr<Pipeline> PipelineFactory::Create(PipelineSettings settings)
+    unique_ptr<Pipeline> PipelineFactory::Create(Settings::Pipeline settings)
     {
         auto pipeline = make_unique<Pipeline>();
         pipeline->set_in_type(IOTypeHelper::parse_type_index(settings.input_type));

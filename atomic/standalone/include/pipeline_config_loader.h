@@ -5,5 +5,5 @@ using namespace Quant;
 
 struct PipelineSettingsLoader
 {
-  PipelineSettings Load(const std::filesystem::path &);
+  Settings::Pipeline Load(const std::filesystem::path &);
 };

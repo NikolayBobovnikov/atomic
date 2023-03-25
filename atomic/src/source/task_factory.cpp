@@ -77,7 +77,7 @@ namespace Quant
     return task;
   }
 
-  std::unique_ptr<Task> TaskFactory::Create(TaskSettings settings)
+  std::unique_ptr<Task> TaskFactory::Create(Settings::Task settings)
   {
     return Create(IOTypeHelper::parse_type_index(settings.input_type),
                   IOTypeHelper::parse_type_index(settings.output_type),

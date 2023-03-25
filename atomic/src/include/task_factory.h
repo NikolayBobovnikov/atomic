@@ -18,7 +18,7 @@ namespace Quant
             std::string name,
             TaskParameters params);
 
-        static std::unique_ptr<Task> Create(TaskSettings settings);
+        static std::unique_ptr<Task> Create(Settings::Task settings);
 
         ~TaskFactory(); // define where pipml type is complete
     };

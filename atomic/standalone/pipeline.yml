@@ -4,31 +4,32 @@
  # - local, for the task (optional)
 
 ---
-- input type: float
-- output type: int
-- pipeline:
-    - task:
-        name: multiply
-        input type: int
-        output type: int
-        args:
-          - arg:
-              type: int
-              value: 2
-    - task:
-        name: add
-        input type: int
-        output type: float
-        args:
-          - arg:
-              type: float
-              value: 0.5
-    - task:
-        name: complex task
-        input type: float
-        output type: int
-        kwargs:
-          - kwarg:
-              name: strategy
-              type: string
-              value: interpolation
+
+input type: "float"
+output type: "int"
+pipeline:
+  - task:
+      name: "multiply"
+      input type: "int"
+      output type: "int"
+      args:
+        - arg:
+            type: "int"
+            value: 2
+  - task:
+      name: "add"
+      input type: "int"
+      output type: "float"
+      args:
+        - arg:
+            type: "float"
+            value: 0.5
+  - task:
+      name: "complex task"
+      input type: "float"
+      output type: "int"
+      kwargs:
+        - kwarg:
+            name: "strategy"
+            type: "string"
+            value: "interpolation"

@@ -6,7 +6,7 @@ namespace Quant
     struct Pipeline;
     struct PipelineFactory
     {
-        static std::unique_ptr<Pipeline> Create(PipelineSettings);
+        static std::unique_ptr<Pipeline> Create(Settings::Pipeline);
 
         ~PipelineFactory(); // define where pipml type is complete
     };

@@ -14,10 +14,7 @@
 #include "task_factory.h"
 
 using namespace std;
-namespace
-{
 
-}
 namespace Quant
 {
   Pipeline::Pipeline() = default;
