@@ -54,20 +54,24 @@ namespace
       for (const auto &task : yaml[pipeline])
       {
         // add task
-        settings.tasks.emplace_back(task[name].as<string>(), task[input_type].as<string>(), task[output_type].as<string>());
-        auto &added_task = settings.tasks.back();
+        TaskSettings task_settings;
+        task_settings.name = task[name].as<string>();
+        task_settings.input_type = task[input_type].as<string>();
+        task_settings.output_type = task[output_type].as<string>();
 
         // fill unnamed arguments
         for (const auto &targ : task[args])
         {
-          added_task.args.push_back(targ.as<string>());
+          task_settings.args.push_back(targ.as<string>());
         }
 
         // fill named arguments
         for (const auto &tkwarg : task[args])
         {
-          added_task.kwargs[tkwarg[name].as<string>()] = tkwarg[value].as<string>();
+          task_settings.kwargs[tkwarg[name].as<string>()] = tkwarg[value].as<string>();
         }
+
+        settings.tasks.push_back(task_settings);
       }
 
       return settings;
