@@ -9,7 +9,7 @@
 #include "task_processors/mul.h"
 #include "task_processors/log.h"
 #include "task_processors/pow.h"
-// #include "task_processors/avg.h"
+#include "task_processors/avg.h"
 
 using namespace std;
 

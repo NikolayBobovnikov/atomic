@@ -16,44 +16,37 @@ namespace Quant
             {
                 // write current data to the buffer
                 std::visit(overload{
-                               [this](auto value) -> data_t
+                               [&](auto value)
                                {
                                    // cycle write
                                    m_pos = m_pos < m_values.size() ? m_pos : 0;
                                    m_values[m_pos] = value;
                                    ++m_pos;
-                                   return std::accumulate(m_values.begin(), m_values.end(), 0.0) / m_values.size();
                                },
                            },
                            input_data);
 
                 // calculate sum of the buffer
-                data_t sum_t = 0;
+                data_t sum{0};
                 for (const auto &v : m_values)
                 {
-                    sum_t = std::visit(overload{
-                                           [](auto value, auto sum) -> data_t
-                                           {
-                                               return value + sum;
-                                           },
-                                       },
-                                       v, sum_t);
+                    std::visit(overload{
+                                   [&sum](auto value, auto curr_sum)
+                                   {
+                                       sum = value + curr_sum;
+                                   },
+                               },
+                               v, sum);
                 }
 
                 // calculate average
-                // std::visit(overload{
-                //                [this](auto value) -> data_t
-                //                {
-                //                    // cycle write
-                //                    m_pos = m_pos < m_values.size() ? m_pos : 0;
-                //                    m_values[m_pos] = value;
-                //                    ++m_pos;
-                //                    return std::accumulate(m_values.begin(), m_values.end(), 0.0) / m_values.size();
-                //                },
-                //            },
-                //            input_data);
-
-                return sum_t;
+                return std::visit(overload{
+                                      [this](auto sum_value) -> data_t
+                                      {
+                                          return sum_value / m_values.size();
+                                      },
+                                  },
+                                  sum);
             }
 
             void set_parameters(TaskParameters params) override
