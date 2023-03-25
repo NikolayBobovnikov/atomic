@@ -6,6 +6,8 @@ namespace Quant
 {
   using namespace std;
 
+  Task::Task() = default;
+
   Task::Task(
       const type_info &input_type,
       const type_info &output_type,

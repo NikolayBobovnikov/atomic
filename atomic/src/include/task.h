@@ -11,6 +11,7 @@ namespace Quant
   struct TaskProcessor;
   struct Task : IOTypeInfo, IProcessor, IOTypeChecker
   {
+    Task();
     Task(const std::type_info &input_type,
          const std::type_info &output_type,
          std::string name);

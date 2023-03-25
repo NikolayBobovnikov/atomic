@@ -12,6 +12,7 @@ namespace Quant
   struct Task;
   struct Pipeline : IProcessor, IOTypeInfo
   {
+    Pipeline();
     Pipeline(const std::type_info &input_type, const std::type_info &output_type);
     ~Pipeline(); // define where pipml type is complete
 
