@@ -59,6 +59,10 @@ namespace
     {
       return make_unique<Tasks::Log>();
     }
+    if (task_name == "avg")
+    {
+      return make_unique<Tasks::Avg>();
+    }
 
     throw invalid_argument("Specified task is not supported: " + task_name);
   }
