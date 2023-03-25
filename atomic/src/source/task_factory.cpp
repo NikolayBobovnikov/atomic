@@ -74,4 +74,9 @@ namespace Quant
 
     return task;
   }
+
+  std::unique_ptr<Task> TaskFactory::Create(TaskSettings settings)
+  {
+    return std::unique_ptr<Task>();
+  }
 }

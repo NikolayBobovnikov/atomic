@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "parameters.h"
+#include "settings.h"
 
 namespace Quant
 {
@@ -15,5 +16,7 @@ namespace Quant
             const std::type_info &output_type,
             std::string name,
             TaskParameters params);
+
+        static std::unique_ptr<Task> Create(TaskSettings settings);
     };
 }
