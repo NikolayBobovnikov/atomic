@@ -1,3 +1,5 @@
+#pragma once
+
 #include "task.h"
 #include <iostream>
 
@@ -5,33 +7,24 @@ namespace Quant
 {
   namespace Tasks
   {
-    struct Add final : TaskProcessorBase
+    struct Add final : TaskProcessor
     {
-      data_t process(data_t data) const override
+      data_t process(data_t input_data) const override
       {
-        // TODO: move to outer class
-        // verify input data type
-        check_input(data);
-
-        // TODO: leave in this (strategy) class, define interface
-        data_t out = std::visit(overload{
-                                    [](auto input, auto param_value) -> data_t
-                                    { return input + param_value; },
-                                },
-                                data, m_parameter);
-
-        // TODO: move to base class
-        check_output(out);
-        return out;
+        return std::visit(overload{
+                              [](auto input, auto value) -> data_t
+                              { return input + value; },
+                          },
+                          input_data, m_value);
       }
 
       void set_parameters(TaskParameters params) override
       {
-        m_parameter = params.args[0];
+        m_value = params.args[0];
       }
 
     private:
-      data_t m_parameter;
+      data_t m_value;
     };
   }
 }

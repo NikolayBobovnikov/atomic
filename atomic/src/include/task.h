@@ -13,16 +13,11 @@
 
 namespace Quant
 {
-  struct Task : IProcessor, DataTypeInfo
+  struct Task : IProcessor, DataTypeInfo, IODataTypeChecker
   {
     Task(const std::type_info &input_type,
          const std::type_info &output_type,
          std::string name);
-
-    // static std::unique_ptr<Task> Create(const std::type_info& input_type,
-    //                                     const std::type_info& output_type,
-    //                                     std::string name,
-    //                                     std::unique_ptr<IProcessor> processor);
 
     Task(const Task &) = delete;
     Task &operator=(const Task &) = delete;

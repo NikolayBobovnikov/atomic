@@ -15,7 +15,10 @@ namespace Quant
 
   data_t Task::process(data_t data) const
   {
-    return m_processor->process(data);
+    check_input(data);
+    auto output = m_processor->process(data);
+    check_output(output);
+    return output;
   }
 
   void Task::set_processor(std::unique_ptr<IProcessor> processor)

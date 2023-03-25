@@ -30,8 +30,9 @@ namespace Quant
   };
 
   // parametrize by input and output types
-  struct TaskProcessorBase : IProcessor, IODataTypeChecker, IParametrized
+  struct TaskProcessor : IProcessor, IParametrized
   {
+    virtual ~TaskProcessor() = default;
   };
 
   // parametrize by input and output types
