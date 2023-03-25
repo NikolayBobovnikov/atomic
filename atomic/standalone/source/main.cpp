@@ -16,13 +16,29 @@ inputs:
 #include "cli_options.h"
 #include "pipeline_config_loader.h"
 #include "pipeline.h"
+#include "pipeline_factory.h"
 
 using namespace std;
 using namespace Quant;
 
+void test()
+{
+  // test
+  Pipeline p(typeid(int), typeid(int));
+  // test: multiply by 2 and add 0.5
+  TaskParameters mul_param;
+  TaskParameters add_param;
+  mul_param.add(2);
+  add_param.add(0.5);
+  p.add_task(typeid(int), typeid(int), "multiply", mul_param);
+  p.add_task(typeid(int), typeid(float), "add", add_param);
+
+  auto res = p.process(1);
+  cout << "result" << std::get<int>(res) << endl;
+}
+
 int main(int argc, char *argv[])
 {
-
   try
   {
     // 1. parse CLI options
@@ -36,20 +52,7 @@ int main(int argc, char *argv[])
     auto settings = settings_loader.Load(options.config);
 
     // 3. construct pipeline from the configuration object
-    Pipeline p(typeid(int), typeid(int));
-
-    // test: multiply by 2 and add 0.5
-    TaskParameters mul_param;
-    TaskParameters add_param;
-    mul_param.add(2);
-    add_param.add(0.5);
-    p.add_task(typeid(int), typeid(int), "multiply", mul_param);
-    p.add_task(typeid(int), typeid(float), "add", add_param);
-
-    auto res = p.process(1);
-    cout << "result" << std::get<int>(res) << endl;
-
-    // p.process(void);
+    auto pipeline = PipelineFactory::Create(settings);
 
     // 4. process input data
   }
