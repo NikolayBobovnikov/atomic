@@ -9,8 +9,8 @@ namespace Quant
   Task::Task() = default;
 
   Task::Task(
-      const type_info &input_type,
-      const type_info &output_type,
+      type_index input_type,
+      type_index output_type,
       string name)
       : IOTypeInfo(input_type, output_type), m_name(move(name))
   {

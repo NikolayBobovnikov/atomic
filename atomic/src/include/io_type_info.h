@@ -11,6 +11,7 @@ namespace Quant
     {
         IOTypeInfo();
         IOTypeInfo(const std::type_info &input_type, const std::type_info &output_type);
+        IOTypeInfo(std::type_index input_type, std::type_index output_type);
 
         void set_in_type(const std::type_info &type);
         void set_out_type(const std::type_info &type);

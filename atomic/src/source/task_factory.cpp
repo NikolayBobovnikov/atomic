@@ -2,7 +2,9 @@
 #include <algorithm>
 #include <unordered_map>
 #include <string>
+#include "io_type_helper.h"
 #include "task_factory.h"
+#include "task_parameters_factory.h"
 #include "task_processors/add.h"
 #include "task_processors/multiply.h"
 
@@ -12,23 +14,23 @@ namespace
 {
   using namespace Quant;
 
-  unique_ptr<IDataTypeChecker> make_data_checker(const type_info &ti)
+  unique_ptr<IDataTypeChecker> make_data_checker(type_index ti)
   {
     static const string type_not_supported_prfix = "Type is not supported: ";
 
-    if (ti == typeid(int))
+    if (ti == type_index(typeid(int)))
     {
       return make_unique<DataTypeChecker<int>>();
     }
-    if (ti == typeid(size_t))
+    if (ti == type_index(typeid(size_t)))
     {
       return make_unique<DataTypeChecker<size_t>>();
     }
-    if (ti == typeid(float))
+    if (ti == type_index(typeid(float)))
     {
       return make_unique<DataTypeChecker<float>>();
     }
-    if (ti == typeid(double))
+    if (ti == type_index(typeid(double)))
     {
       return make_unique<DataTypeChecker<double>>();
     }
@@ -55,8 +57,8 @@ namespace Quant
 {
   // template<class InputType, class OutputType>
   unique_ptr<Task> TaskFactory::Create(
-      const type_info &input_type,
-      const type_info &output_type,
+      type_index input_type,
+      type_index output_type,
       string task_name,
       TaskParameters task_params)
   {
@@ -77,6 +79,11 @@ namespace Quant
 
   std::unique_ptr<Task> TaskFactory::Create(TaskSettings settings)
   {
-    return std::unique_ptr<Task>();
+    auto taks_parameters = TaskParametersFactory::Create(settings);
+
+    return Create(IOTypeHelper::parse_type_index(settings.input_type),
+                  IOTypeHelper::parse_type_index(settings.output_type),
+                  settings.name,
+                  taks_parameters);
   }
 }

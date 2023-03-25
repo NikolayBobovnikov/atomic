@@ -12,8 +12,8 @@ namespace Quant
   struct Task : IOTypeInfo, IProcessor, IOTypeChecker
   {
     Task();
-    Task(const std::type_info &input_type,
-         const std::type_info &output_type,
+    Task(std::type_index input_type,
+         std::type_index output_type,
          std::string name);
 
     Task(const Task &) = delete;

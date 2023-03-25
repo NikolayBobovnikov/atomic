@@ -14,6 +14,11 @@ namespace Quant
         : m_input_type_index(input_type), m_output_type_index(output_type)
     {
     }
+    IOTypeInfo::IOTypeInfo(std::type_index input_type, std::type_index output_type)
+        : m_input_type_index(input_type), m_output_type_index(output_type)
+    {
+    }
+
     void IOTypeInfo::set_in_type(const type_info &type)
     {
         m_input_type_index = std::type_index(type);

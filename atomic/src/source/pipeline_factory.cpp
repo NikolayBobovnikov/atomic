@@ -22,6 +22,10 @@ namespace Quant
         pipeline->set_in_type(IOTypeHelper::parse_type_index(settings.input_type));
         pipeline->set_out_type(IOTypeHelper::parse_type_index(settings.output_type));
 
+        for (const auto &task_settings : settings.tasks)
+        {
+        }
+
         return pipeline;
     }
 }

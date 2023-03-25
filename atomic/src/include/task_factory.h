@@ -12,8 +12,8 @@ namespace Quant
     {
         // template<class InputType, class OutputType>
         static std::unique_ptr<Task> Create(
-            const std::type_info &input_type,
-            const std::type_info &output_type,
+            std::type_index input_type,
+            std::type_index output_type,
             std::string name,
             TaskParameters params);
 
