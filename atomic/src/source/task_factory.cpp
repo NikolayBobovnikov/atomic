@@ -7,32 +7,47 @@
 
 using namespace std;
 
-namespace Quant
+namespace
 {
+  using namespace Quant;
 
-  unique_ptr<ICheckType> make_checker(const type_info &ti)
+  unique_ptr<IDataTypeChecker> make_data_checker(const type_info &ti)
   {
     static const string type_not_supported_prfix = "Type is not supported: ";
 
     if (ti == typeid(int))
     {
-      return make_unique<CheckType<int>>();
+      return make_unique<DataTypeChecker<int>>();
     }
     if (ti == typeid(size_t))
     {
-      return make_unique<CheckType<size_t>>();
+      return make_unique<DataTypeChecker<size_t>>();
     }
     if (ti == typeid(float))
     {
-      return make_unique<CheckType<float>>();
+      return make_unique<DataTypeChecker<float>>();
     }
     if (ti == typeid(double))
     {
-      return make_unique<CheckType<double>>();
+      return make_unique<DataTypeChecker<double>>();
     }
 
     throw invalid_argument(type_not_supported_prfix + ti.name());
   }
+
+  std::unique_ptr<IProcessor> make_task_processor(string task_name)
+  {
+    if (task_name == "add")
+    {
+      return make_unique<Tasks::Add>();
+    }
+
+    throw invalid_argument("Specified task is not supported: " + task_name);
+  }
+}
+
+namespace Quant
+{
 
   // template<class InputType, class OutputType>
   unique_ptr<Task> TaskFactory::Create(
@@ -45,23 +60,10 @@ namespace Quant
     transform(task_name.begin(), task_name.end(), task_name.begin(), [](unsigned char c)
               { return tolower(c); });
 
-    // construct task
     auto task = make_unique<Task>(input_type, output_type, task_name);
-    std::unique_ptr<IProcessor> processor;
-
-    // make input and output type checkers
-    auto in = make_checker(input_type);
-    auto out = make_checker(output_type);
-
-    // construct specific data processor for the specified task name
-    if (task_name == "add")
-    {
-      processor = make_unique<Tasks::Add>(move(in), move(out));
-    }
-    else
-    {
-      throw invalid_argument("Specified task is not supported: " + task_name);
-    }
+    auto processor = make_task_processor(task_name);
+    processor->set_input_checker(make_data_checker(input_type));
+    processor->set_output_checker(make_data_checker(output_type));
 
     // add parameters if applicable
     if (IParametrized *parametrized_task = dynamic_cast<IParametrized *>(processor.get()))

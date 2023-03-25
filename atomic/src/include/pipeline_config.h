@@ -1,4 +1,6 @@
 
-struct PipelineConfiguration {
+#pragma once
 
+struct PipelineConfiguration
+{
 };

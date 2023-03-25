@@ -6,17 +6,12 @@
 #include <vector>
 #include "variant_helper.h"
 #include <unordered_map>
-
+#include "data_types.h"
+#include "data_type_checker.h"
 namespace Quant
 {
-  // supported data types; string for logging error messages in the output inplace
-  using data_t = std::variant<int, size_t, float, double>;
-
-  // using data_out_t = variant_append<data_t, std::string>;
-  using data_out_t = std::variant<int, size_t, float, double, std::string>;
-
   // main interface for the pipeline and tasks
-  struct IProcessor
+  struct IProcessor : IODataTypeChecker
   {
     virtual data_t process(data_t) const = 0;
     virtual ~IProcessor() = default;

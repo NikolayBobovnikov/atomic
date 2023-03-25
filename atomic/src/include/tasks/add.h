@@ -6,15 +6,8 @@ namespace Quant
   namespace Tasks
   {
     struct Add final : IProcessor,
-                       IParametrized,
-                       IInOut
+                       IParametrized
     {
-      // TODO: move to builder function
-      Add(std::unique_ptr<ICheckType> in, std::unique_ptr<ICheckType> out)
-          : IInOut(std::move(in), std::move(out))
-      {
-      }
-
       data_t process(data_t data) const override
       {
         // TODO: move to outer class
