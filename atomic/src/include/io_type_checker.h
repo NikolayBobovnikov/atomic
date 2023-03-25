@@ -20,6 +20,21 @@ namespace Quant
         }
     };
 
+    // TODO
+    template <class T>
+    struct OutputTypeConverter
+    {
+        // throw if data_t doesn't contain T
+        T convert(data_t data) const override
+        {
+            return std::visit(overload{
+                                  [](auto value) -> T
+                                  { return static_cast<T>(value); },
+                              },
+                              data);
+        }
+    };
+
     struct IOTypeChecker
     {
         virtual ~IOTypeChecker() = default;

@@ -6,7 +6,10 @@
 #include "task_factory.h"
 #include "task_parameters_factory.h"
 #include "task_processors/add.h"
-#include "task_processors/multiply.h"
+#include "task_processors/mul.h"
+#include "task_processors/log.h"
+#include "task_processors/pow.h"
+// #include "task_processors/avg.h"
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <stdexcept>
 #include "task_processor.h"
 
 namespace Quant
@@ -20,6 +20,7 @@ namespace Quant
 
       void set_parameters(TaskParameters params) override
       {
+        expect_n_arguments<1>(params);
         m_value = params.args[0];
       }
 
