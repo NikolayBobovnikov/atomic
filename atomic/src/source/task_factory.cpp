@@ -47,9 +47,17 @@ namespace
     {
       return make_unique<Tasks::Add>();
     }
-    if (task_name == "multiply")
+    if (task_name == "multiply" || task_name == "mul")
     {
       return make_unique<Tasks::Multiply>();
+    }
+    if (task_name == "pow")
+    {
+      return make_unique<Tasks::Power>();
+    }
+    if (task_name == "log")
+    {
+      return make_unique<Tasks::Log>();
     }
 
     throw invalid_argument("Specified task is not supported: " + task_name);
