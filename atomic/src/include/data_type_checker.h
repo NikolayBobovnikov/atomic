@@ -20,9 +20,9 @@ namespace Quant
         }
     };
 
-    struct IODataTypeChecker
+    struct IOTypeChecker
     {
-        virtual ~IODataTypeChecker() = default;
+        virtual ~IOTypeChecker() = default;
 
         void set_input_checker(std::unique_ptr<IDataTypeChecker>);
 
@@ -33,7 +33,7 @@ namespace Quant
         void check_output(data_t data) const;
 
     protected:
-        IODataTypeChecker() = default;
+        IOTypeChecker() = default;
 
     private:
         std::unique_ptr<IDataTypeChecker> m_in;

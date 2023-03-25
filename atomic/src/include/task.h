@@ -1,19 +1,15 @@
 #pragma once
 
-#include <functional>
-#include <variant>
-#include <typeinfo>
-#include <typeindex>
 #include <string>
 #include <memory>
-#include "task.h"
 #include "processor.h"
-#include "variant_helper.h"
+#include "data_type_info.h"
 #include "data_type_checker.h"
 
 namespace Quant
 {
-  struct Task : IProcessor, DataTypeInfo, IODataTypeChecker
+  struct TaskProcessor;
+  struct Task : IProcessor, IOTypeInfo, IOTypeChecker
   {
     Task(const std::type_info &input_type,
          const std::type_info &output_type,
@@ -23,13 +19,14 @@ namespace Quant
     Task &operator=(const Task &) = delete;
     Task(Task &&) = default;
     Task &operator=(Task &&) = default;
+    ~Task(); // define where pipml type is complete
 
     virtual data_t process(data_t) const override;
     const std::string &name() const;
-    void set_processor(std::unique_ptr<IProcessor> processor);
+    void set_processor(std::unique_ptr<TaskProcessor> processor);
 
   private:
     const std::string m_name;
-    std::unique_ptr<IProcessor> m_processor;
+    std::unique_ptr<TaskProcessor> m_processor;
   };
 }

@@ -1,17 +1,20 @@
 #include <memory>
 #include "task.h"
-
-using namespace std;
+#include "task_processor.h"
 
 namespace Quant
 {
+  using namespace std;
+
   Task::Task(
       const type_info &input_type,
       const type_info &output_type,
       string name)
-      : DataTypeInfo(input_type, output_type), m_name(move(name))
+      : IOTypeInfo(input_type, output_type), m_name(move(name))
   {
   }
+
+  Task::~Task() = default;
 
   data_t Task::process(data_t data) const
   {
@@ -21,7 +24,7 @@ namespace Quant
     return output;
   }
 
-  void Task::set_processor(std::unique_ptr<IProcessor> processor)
+  void Task::set_processor(std::unique_ptr<TaskProcessor> processor)
   {
     m_processor = move(processor);
   }

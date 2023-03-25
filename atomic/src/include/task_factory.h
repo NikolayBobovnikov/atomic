@@ -2,10 +2,11 @@
 
 #include <memory>
 #include <vector>
-#include "task.h"
+#include "parameters.h"
 
 namespace Quant
 {
+    struct Task;
     struct TaskFactory
     {
         // template<class InputType, class OutputType>

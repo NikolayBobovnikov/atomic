@@ -1,22 +1,19 @@
 ﻿#pragma once
 
 #include <memory>
-#include <iostream>
 #include <vector>
-#include <functional>
-#include <variant>
-#include <typeinfo>
-#include <typeindex>
-#include <exception>
 #include <string>
-#include "task.h"
+#include "parameters.h"
 #include "processor.h"
+#include "data_type_info.h"
+
 namespace Quant
 {
-  struct Pipeline : IProcessor, DataTypeInfo
+  struct Task;
+  struct Pipeline : IProcessor, IOTypeInfo
   {
     Pipeline(const std::type_info &input_type, const std::type_info &output_type);
-    ~Pipeline() = default;
+    ~Pipeline(); // define where pipml type is complete
 
     void validate() const;
     data_t process(data_t data) const override;

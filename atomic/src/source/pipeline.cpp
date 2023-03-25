@@ -22,9 +22,11 @@ namespace Quant
 {
 
   Pipeline::Pipeline(const std::type_info &input_type, const std::type_info &output_type)
-      : DataTypeInfo(input_type, output_type)
+      : IOTypeInfo(input_type, output_type)
   {
   }
+
+  Pipeline::~Pipeline() = default;
 
   void Pipeline::validate() const
   {

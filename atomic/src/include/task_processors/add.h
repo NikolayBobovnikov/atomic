@@ -1,7 +1,7 @@
 #pragma once
 
-#include "task.h"
 #include <iostream>
+#include "task_processor.h"
 
 namespace Quant
 {

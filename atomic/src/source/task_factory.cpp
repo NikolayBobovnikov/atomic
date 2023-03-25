@@ -3,8 +3,8 @@
 #include <unordered_map>
 #include <string>
 #include "task_factory.h"
-#include "tasks/add.h"
-#include "tasks/multiply.h"
+#include "task_processors/add.h"
+#include "task_processors/multiply.h"
 
 using namespace std;
 
