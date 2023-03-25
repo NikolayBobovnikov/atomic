@@ -21,7 +21,7 @@ namespace Quant
         for (const auto &task_settings : settings.tasks)
         {
             auto task = TaskFactory::Create(task_settings);
-            // pipeline->add_task();
+            pipeline->add_task(move(task));
         }
 
         return pipeline;

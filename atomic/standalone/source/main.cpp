@@ -55,6 +55,8 @@ int main(int argc, char *argv[])
     auto pipeline = PipelineFactory::Create(settings);
 
     // 4. process input data
+    cout << "Process data" << endl;
+    auto result = pipeline->process(1);
   }
   catch (exception &e)
   {

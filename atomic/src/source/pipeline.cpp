@@ -87,7 +87,7 @@ namespace Quant
     // input type of first task must be equal to input type of pipeline
     if (task->get_in_type() != prev_type)
     {
-      throw invalid_argument(in_error_prefix + task->name() + "Got: " + task->get_in_type().name() + ", expected: " + get_in_type().name());
+      throw invalid_argument(in_error_prefix + task->name() + ". Got: " + task->get_in_type().name() + ", expected: " + get_in_type().name());
     }
 
     tasks.push_back(move(task));

@@ -5,6 +5,13 @@
 
 ---
 
+ # Pipeline configuration for processing input data
+ # Types of input and output data:
+ # - global, for the pipeline
+ # - local, for the task (optional)
+
+---
+
 input type: float
 output type: int
 pipeline:
@@ -21,13 +28,26 @@ pipeline:
     args:
       - type: float
         value: 0.5
-          
-  - name: complex task
+
+  - name: pow
     input type: float
-    output type: int
-    kwargs:
-      - name: strategy
-        type: string
-        value: interpolation
-            
+    output type: double
+    args:
+      - type: int
+        value: 2
+
+  - name: log
+    input type: double
+    output type: double
+    args:
+      - type: int
+        value: 7
+
+  - name: avg
+    input type: double
+    output type: double
+    args:
+      - type: int
+        value: 10
+           
       
