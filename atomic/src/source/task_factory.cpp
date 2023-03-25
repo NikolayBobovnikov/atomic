@@ -79,11 +79,11 @@ namespace Quant
 
   std::unique_ptr<Task> TaskFactory::Create(TaskSettings settings)
   {
-    auto taks_parameters = TaskParametersFactory::Create(settings);
-
     return Create(IOTypeHelper::parse_type_index(settings.input_type),
                   IOTypeHelper::parse_type_index(settings.output_type),
                   settings.name,
-                  taks_parameters);
+                  TaskParametersFactory::Create(settings));
   }
+
+  TaskFactory::~TaskFactory() = default;
 }

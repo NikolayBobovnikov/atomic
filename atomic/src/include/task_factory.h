@@ -4,13 +4,14 @@
 #include <vector>
 #include "parameters.h"
 #include "settings.h"
+#include "task.h"
 
 namespace Quant
 {
-    struct Task;
+    // TODO: replace #include "task.h" with  forward decl
+    // struct Task;
     struct TaskFactory
     {
-        // template<class InputType, class OutputType>
         static std::unique_ptr<Task> Create(
             std::type_index input_type,
             std::type_index output_type,
@@ -18,5 +19,7 @@ namespace Quant
             TaskParameters params);
 
         static std::unique_ptr<Task> Create(TaskSettings settings);
+
+        ~TaskFactory(); // define where pipml type is complete
     };
 }

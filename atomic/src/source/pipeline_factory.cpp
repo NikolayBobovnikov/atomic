@@ -2,6 +2,7 @@
 #include <io_type_helper.h>
 #include "pipeline_factory.h"
 #include "pipeline.h"
+#include "task_factory.h"
 
 using namespace std;
 
@@ -24,6 +25,8 @@ namespace Quant
 
         for (const auto &task_settings : settings.tasks)
         {
+            auto task = TaskFactory::Create(task_settings);
+            // pipeline->add_task();
         }
 
         return pipeline;
