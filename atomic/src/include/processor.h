@@ -11,7 +11,7 @@
 namespace Quant
 {
   // main interface for the pipeline and tasks
-  struct IProcessor : IODataTypeChecker
+  struct IProcessor
   {
     virtual data_t process(data_t) const = 0;
     virtual ~IProcessor() = default;
@@ -26,11 +26,16 @@ namespace Quant
   struct IParametrized
   {
     virtual ~IParametrized() = default;
-    virtual void set_parameters(TaskParameters params) = 0;
+    virtual void set_parameters(TaskParameters params){/* no parameters by default*/};
   };
 
   // parametrize by input and output types
-  struct ProcessorBase : IProcessor
+  struct TaskProcessorBase : IProcessor, IODataTypeChecker, IParametrized
+  {
+  };
+
+  // parametrize by input and output types
+  struct ProcessorBase : IProcessor, IODataTypeChecker, IParametrized
   {
     ProcessorBase(const std::type_info &input_type, const std::type_info &output_type);
     std::type_index input_type() const;

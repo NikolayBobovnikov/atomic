@@ -35,7 +35,7 @@ namespace
     throw invalid_argument(type_not_supported_prfix + ti.name());
   }
 
-  std::unique_ptr<IProcessor> make_task_processor(string task_name)
+  std::unique_ptr<TaskProcessorBase> make_task_processor(string task_name)
   {
     if (task_name == "add")
     {
@@ -48,7 +48,6 @@ namespace
 
 namespace Quant
 {
-
   // template<class InputType, class OutputType>
   unique_ptr<Task> TaskFactory::Create(
       const type_info &input_type,
@@ -60,19 +59,13 @@ namespace Quant
     transform(task_name.begin(), task_name.end(), task_name.begin(), [](unsigned char c)
               { return tolower(c); });
 
+    auto task_processor = make_task_processor(task_name);
+    task_processor->set_input_checker(make_data_checker(input_type));
+    task_processor->set_output_checker(make_data_checker(output_type));
+    task_processor->set_parameters(task_params);
+
     auto task = make_unique<Task>(input_type, output_type, task_name);
-    auto processor = make_task_processor(task_name);
-    processor->set_input_checker(make_data_checker(input_type));
-    processor->set_output_checker(make_data_checker(output_type));
-
-    // add parameters if applicable
-    if (IParametrized *parametrized_task = dynamic_cast<IParametrized *>(processor.get()))
-    {
-      parametrized_task->set_parameters(task_params);
-    }
-
-    // set data processor to the task
-    task->set_processor(move(processor));
+    task->set_processor(move(task_processor));
 
     return task;
   }

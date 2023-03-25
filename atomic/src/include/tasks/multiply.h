@@ -4,7 +4,7 @@ namespace Quant
 {
     namespace Tasks
     {
-        struct Multiply final : Task
+        struct Multiply final : TaskProcessorBase
         {
         }
     }

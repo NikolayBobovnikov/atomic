@@ -5,8 +5,7 @@ namespace Quant
 {
   namespace Tasks
   {
-    struct Add final : IProcessor,
-                       IParametrized
+    struct Add final : TaskProcessorBase
     {
       data_t process(data_t data) const override
       {
