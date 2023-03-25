@@ -56,10 +56,13 @@ int main(int argc, char *argv[])
 
     // 4. process input data
   }
-  catch (exception &)
+  catch (exception &e)
   {
-    cout << "Press any key to exit" << endl;
-    cin.get();
+    cout << e.what() << endl;
+
+    // TODO:
+    // cout << "Press any key to exit" << endl;
+    // cin.get();
 
     // In case of exceptions return status code for failure
     return -1;
