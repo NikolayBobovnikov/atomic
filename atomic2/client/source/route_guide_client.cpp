@@ -38,7 +38,7 @@ using grpc::ClientReader;
 using grpc::ClientReaderWriter;
 using grpc::ClientWriter;
 using grpc::Status;
-using workers::Employee;
+using workers::Employees;
 using workers::Feature;
 using workers::Point;
 using workers::Rectangle;
@@ -70,7 +70,7 @@ RouteNote MakeRouteNote(const std::string &message, long latitude,
 class RouteGuideClient {
 public:
   RouteGuideClient(std::shared_ptr<Channel> channel, const std::string &db)
-      : stub_(Employee::NewStub(channel)) {
+      : stub_(Employees::NewStub(channel)) {
     workers::ParseDb(db, &feature_list_);
   }
 
@@ -207,7 +207,7 @@ private:
   }
 
   const float kCoordFactor_ = 10000000.0;
-  std::unique_ptr<Employee::Stub> stub_;
+  std::unique_ptr<Employees::Stub> stub_;
   std::vector<Feature> feature_list_;
 };
 

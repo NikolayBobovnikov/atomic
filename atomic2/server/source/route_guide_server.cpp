@@ -40,7 +40,7 @@ using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
 using std::chrono::system_clock;
-using workers::Employee;
+using workers::Employees;
 using workers::Feature;
 using workers::Point;
 using workers::Rectangle;
@@ -80,7 +80,7 @@ std::string GetFeatureName(const Point &point,
   return "";
 }
 
-class RouteGuideImpl final : public Employee::Service {
+class RouteGuideImpl final : public Employees::Service {
 public:
   explicit RouteGuideImpl(const std::string &db) {
     workers::ParseDb(db, &feature_list_);

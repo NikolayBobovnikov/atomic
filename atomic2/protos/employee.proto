@@ -8,7 +8,18 @@ option objc_class_prefix = "RTG";
 package workers;
 
 // Interface exported by the server.
-service Employee {
+service Employees {
+  rpc GetEmployee(EmployeeId) returns (EmployeeId) {}
+  rpc InsertEmployee(EmployeeData) returns (EmployeeId) {}
+  rpc ListEmployees(ListEmployeesRequest) returns (stream Employee) {}
+  rpc GetEmployeePosition(EmployeeId) returns (EmployeePosition) {}
+  rpc GetEmployeeManager(EmployeeId) returns (Employee) {}
+  rpc SetEmployeePosition(SetEmployeePositionRequest)
+      returns (SetEmployeePositionResponce) {}
+  rpc SetEmployeeManager(SetEmployeeManagerRequest)
+      returns (SetEmployeeManagerResponce) {}
+  rpc DeleteEmployee(EmployeeId) returns (DeleteEmployeeResponce) {}
+
   // A simple RPC.
   //
   // Obtains the feature at a given position.
@@ -38,10 +49,40 @@ service Employee {
   rpc RouteChat(stream RouteNote) returns (stream RouteNote) {}
 }
 
-// Points are represented as latitude-longitude pairs in the E7 representation
-// (degrees multiplied by 10**7 and rounded to the nearest integer).
-// Latitudes should be in the range +/- 90 degrees and longitude should be in
-// the range +/- 180 degrees (inclusive).
+message Employee {
+  int64 id = 1;
+  optional int64 manager_id = 2;
+  string name = 3;
+  string position = 4;
+}
+
+message EmployeeData {
+  optional int64 manager_id = 1;
+  string name = 2;
+  string position = 3;
+}
+
+message EmployeeId { int64 id = 1; }
+
+message ListEmployeesRequest {}
+
+message EmployeePosition { string position = 1; }
+message SetEmployeePositionRequest {
+  int64 id = 1;
+  string position = 2;
+}
+message SetEmployeePositionResponce {}
+message SetEmployeeManagerRequest {
+  int64 emp_id = 1;
+  int64 manager_id = 2;
+}
+message SetEmployeeManagerResponce {}
+message DeleteEmployeeResponce {}
+
+// Points are represented as latitude-longitude pairs in the E7
+// representation (degrees multiplied by 10**7 and rounded to the nearest
+// integer). Latitudes should be in the range +/- 90 degrees and longitude
+// should be in the range +/- 180 degrees (inclusive).
 message Point {
   int32 latitude = 1;
   int32 longitude = 2;
