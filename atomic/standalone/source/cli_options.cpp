@@ -47,6 +47,13 @@ namespace
       cout << argv[i] << endl;
     }
   }
+
+  void log(const CLIOptions &options)
+  {
+    cout << "Input file: " << options.input << endl;
+    cout << "Output file: " << options.output << endl;
+    cout << "Using pipeline settings: " << options.config << endl;
+  }
 }
 
 CLIOptions::CLIOptions(int argc, char *argv[])
@@ -80,4 +87,6 @@ CLIOptions::CLIOptions(int argc, char *argv[])
     cout << "Error in command line arguments: " << e.what() << endl;
     throw;
   }
+
+  log(*this);
 }

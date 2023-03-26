@@ -17,6 +17,7 @@ inputs:
 #include "settings_loader.h"
 #include "pipeline.h"
 #include "pipeline_factory.h"
+#include "stream_processor.h"
 
 using namespace std;
 using namespace Quant;
@@ -43,20 +44,19 @@ int main(int argc, char *argv[])
   {
     // 1. parse CLI options
     CLIOptions options(argc, argv);
-    cout << "Input file: " << options.input << endl;
-    cout << "Output file: " << options.output << endl;
-    cout << "Using pipeline settings: " << options.config << endl;
 
-    // 2. parse pipeline configuration settings
+    // 2. parse settings
     PipelineSettingsLoader settings_loader;
     auto settings = settings_loader.Load(options.config);
 
-    // 3. construct pipeline from the configuration object
+    // 3. make pipeline
     auto pipeline = PipelineFactory::Create(settings);
 
-    // 4. process input data
-    cout << "Process data" << endl;
-    auto result = pipeline->process(1);
+    // 4. make processor for input data with the pipeline
+    StreamProcessor input_data_processor(move(pipeline));
+
+    // 5. process input data
+    input_data_processor.batch_process(options.input, options.output);
   }
   catch (exception &e)
   {
