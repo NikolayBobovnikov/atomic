@@ -25,12 +25,12 @@
 
 #include "helper.h"
 
+#include "employee.grpc.pb.h"
 #include <grpc/grpc.h>
 #include <grpcpp/security/server_credentials.h>
 #include <grpcpp/server.h>
 #include <grpcpp/server_builder.h>
 #include <grpcpp/server_context.h>
-#include "employee.grpc.pb.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -39,18 +39,18 @@ using grpc::ServerReader;
 using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
-using routeguide::Feature;
-using routeguide::Point;
-using routeguide::Rectangle;
-using routeguide::RouteGuide;
-using routeguide::RouteNote;
-using routeguide::RouteSummary;
 using std::chrono::system_clock;
+using workers::Employee;
+using workers::Feature;
+using workers::Point;
+using workers::Rectangle;
+using workers::RouteNote;
+using workers::RouteSummary;
 
 float ConvertToRadians(float num) { return num * 3.1415926 / 180; }
 
 // The formula is based on http://mathforum.org/library/drmath/view/51879.html
-float GetDistance(const Point& start, const Point& end) {
+float GetDistance(const Point &start, const Point &end) {
   const float kCoordFactor = 10000000.0;
   float lat_1 = start.latitude() / kCoordFactor;
   float lat_2 = end.latitude() / kCoordFactor;
@@ -64,14 +64,14 @@ float GetDistance(const Point& start, const Point& end) {
   float a = pow(sin(delta_lat_rad / 2), 2) +
             cos(lat_rad_1) * cos(lat_rad_2) * pow(sin(delta_lon_rad / 2), 2);
   float c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  int R = 6371000;  // metres
+  int R = 6371000; // metres
 
   return R * c;
 }
 
-std::string GetFeatureName(const Point& point,
-                           const std::vector<Feature>& feature_list) {
-  for (const Feature& f : feature_list) {
+std::string GetFeatureName(const Point &point,
+                           const std::vector<Feature> &feature_list) {
+  for (const Feature &f : feature_list) {
     if (f.location().latitude() == point.latitude() &&
         f.location().longitude() == point.longitude()) {
       return f.name();
@@ -80,29 +80,29 @@ std::string GetFeatureName(const Point& point,
   return "";
 }
 
-class RouteGuideImpl final : public RouteGuide::Service {
- public:
-  explicit RouteGuideImpl(const std::string& db) {
-    routeguide::ParseDb(db, &feature_list_);
+class RouteGuideImpl final : public Employee::Service {
+public:
+  explicit RouteGuideImpl(const std::string &db) {
+    workers::ParseDb(db, &feature_list_);
   }
 
-  Status GetFeature(ServerContext* context, const Point* point,
-                    Feature* feature) override {
+  Status GetFeature(ServerContext *context, const Point *point,
+                    Feature *feature) override {
     feature->set_name(GetFeatureName(*point, feature_list_));
     feature->mutable_location()->CopyFrom(*point);
     return Status::OK;
   }
 
-  Status ListFeatures(ServerContext* context,
-                      const routeguide::Rectangle* rectangle,
-                      ServerWriter<Feature>* writer) override {
+  Status ListFeatures(ServerContext *context,
+                      const workers::Rectangle *rectangle,
+                      ServerWriter<Feature> *writer) override {
     auto lo = rectangle->lo();
     auto hi = rectangle->hi();
     long left = (std::min)(lo.longitude(), hi.longitude());
     long right = (std::max)(lo.longitude(), hi.longitude());
     long top = (std::max)(lo.latitude(), hi.latitude());
     long bottom = (std::min)(lo.latitude(), hi.latitude());
-    for (const Feature& f : feature_list_) {
+    for (const Feature &f : feature_list_) {
       if (f.location().longitude() >= left &&
           f.location().longitude() <= right &&
           f.location().latitude() >= bottom && f.location().latitude() <= top) {
@@ -112,8 +112,8 @@ class RouteGuideImpl final : public RouteGuide::Service {
     return Status::OK;
   }
 
-  Status RecordRoute(ServerContext* context, ServerReader<Point>* reader,
-                     RouteSummary* summary) override {
+  Status RecordRoute(ServerContext *context, ServerReader<Point> *reader,
+                     RouteSummary *summary) override {
     Point point;
     int point_count = 0;
     int feature_count = 0;
@@ -142,12 +142,12 @@ class RouteGuideImpl final : public RouteGuide::Service {
     return Status::OK;
   }
 
-  Status RouteChat(ServerContext* context,
-                   ServerReaderWriter<RouteNote, RouteNote>* stream) override {
+  Status RouteChat(ServerContext *context,
+                   ServerReaderWriter<RouteNote, RouteNote> *stream) override {
     RouteNote note;
     while (stream->Read(&note)) {
       std::unique_lock<std::mutex> lock(mu_);
-      for (const RouteNote& n : received_notes_) {
+      for (const RouteNote &n : received_notes_) {
         if (n.location().latitude() == note.location().latitude() &&
             n.location().longitude() == note.location().longitude()) {
           stream->Write(n);
@@ -159,13 +159,13 @@ class RouteGuideImpl final : public RouteGuide::Service {
     return Status::OK;
   }
 
- private:
+private:
   std::vector<Feature> feature_list_;
   std::mutex mu_;
   std::vector<RouteNote> received_notes_;
 };
 
-void RunServer(const std::string& db_path) {
+void RunServer(const std::string &db_path) {
   std::string server_address("0.0.0.0:50051");
   RouteGuideImpl service(db_path);
 
@@ -177,9 +177,9 @@ void RunServer(const std::string& db_path) {
   server->Wait();
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   // Expect only arg: --db_path=path/to/route_guide_db.json.
-  std::string db = routeguide::GetDbFileContent(argc, argv);
+  std::string db = workers::GetDbFileContent(argc, argv);
   RunServer(db);
 
   return 0;
