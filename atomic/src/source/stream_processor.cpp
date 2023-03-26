@@ -17,11 +17,11 @@ namespace Quant
         ifstream ifs(input_file.string());
         ofstream ofs(output_file.string());
 
-        if (ifs.is_open())
+        if (!ifs.is_open())
         {
             throw logic_error("Cannot open input file");
         }
-        if (ofs.is_open())
+        if (!ofs.is_open())
         {
             throw logic_error("Cannot create output file");
         }

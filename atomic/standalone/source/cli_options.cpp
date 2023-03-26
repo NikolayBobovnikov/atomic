@@ -18,7 +18,7 @@ namespace
   static const string arg_config_default_value = "pipeline.yml";
   static const string file_not_exist_prefix = "File not exist: ";
 
-  filesystem::path check(string file, char *argv[])
+  filesystem::path update_path(string file, char *argv[])
   {
     if (!filesystem::is_regular_file(file))
     {
@@ -28,12 +28,18 @@ namespace
 
       if (filesystem::is_regular_file(fullPath))
       {
-        return fullPath;
+        file = fullPath;
       }
-      else
-      {
-        throw invalid_argument(file_not_exist_prefix + file);
-      }
+    }
+
+    return file;
+  }
+
+  filesystem::path check_exist(filesystem::path file)
+  {
+    if (!filesystem::is_regular_file(file))
+    {
+      throw invalid_argument(file_not_exist_prefix + file.string());
     }
 
     return file;
@@ -76,11 +82,11 @@ CLIOptions::CLIOptions(int argc, char *argv[])
     auto cli_options = options.parse(argc, argv);
 
     // if specified parameter is not a full path to an existing file, try to check in the current dir
-    input = check(cli_options[arg_input].as<string>(), argv);
-    config = check(cli_options[arg_config].as<string>(), argv);
+    input = check_exist(update_path(cli_options[arg_input].as<string>(), argv));
+    config = check_exist(update_path(cli_options[arg_config].as<string>(), argv));
 
     // output file is created and thus no need to check its existence
-    output = cli_options[arg_output].as<string>();
+    output = update_path(cli_options[arg_output].as<string>(), argv);
   }
   catch (exception &e)
   {
