@@ -76,7 +76,7 @@ target_link_libraries(grpc_proto
 # common lib
 add_library(helper
   "${CMAKE_CURRENT_SOURCE_DIR}/common/include/helper.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/common/source/helper.cc")
+  "${CMAKE_CURRENT_SOURCE_DIR}/common/source/helper.cpp")
 target_link_libraries(helper
   grpc_proto
   ${_REFLECTION}
