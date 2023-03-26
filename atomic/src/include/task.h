@@ -18,8 +18,8 @@ namespace Quant
 
     Task(const Task &) = delete;
     Task &operator=(const Task &) = delete;
-    Task(Task &&) = default;
-    Task &operator=(Task &&) = default;
+    Task(Task &&) = delete;
+    Task &operator=(Task &&) = delete;
     ~Task(); // define where pipml type is complete
 
     virtual data_t process(data_t) const override;

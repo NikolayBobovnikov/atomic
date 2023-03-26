@@ -9,6 +9,7 @@ namespace Quant
     struct IDataTypeChecker
     {
         virtual void check(data_t data) const = 0;
+        virtual ~IDataTypeChecker() = default;
     };
 
     template <class T>
