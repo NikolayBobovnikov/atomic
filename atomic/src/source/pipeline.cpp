@@ -25,7 +25,7 @@ namespace Quant
   }
   Pipeline::~Pipeline() = default;
 
-  void Pipeline::validate() const
+  void Pipeline::validate_last_task_output_type() const
   {
     if (tasks.size() == 0)
     {
@@ -52,7 +52,7 @@ namespace Quant
     }
 
     // validate
-    validate();
+    validate_last_task_output_type();
 
     // run pipeline
     // save results in place

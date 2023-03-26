@@ -16,7 +16,7 @@ namespace Quant
     Pipeline(const std::type_info &input_type, const std::type_info &output_type);
     ~Pipeline(); // define where pipml type is complete
 
-    void validate() const;
+    void validate_last_task_output_type() const;
     data_t process(data_t data) const override;
     data_out_t process_ext(data_t data) const noexcept;
 
