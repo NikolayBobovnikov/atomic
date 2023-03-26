@@ -5,18 +5,12 @@
 
 ---
 
- # Pipeline configuration for processing input data
- # Types of input and output data:
- # - global, for the pipeline
- # - local, for the task (optional)
+input type: int
+output type: double
 
----
-
-input type: float
-output type: int
 pipeline:
   - name: multiply
-    input type: int
+    # input type: int # optional. if not defined, deduced from the pipeline's input or the output of prev task
     output type: int
     args:
       - type: int
@@ -30,7 +24,7 @@ pipeline:
         value: 0.5
 
   - name: pow
-    input type: float
+    # input type: float
     output type: double
     args:
       - type: int
@@ -49,5 +43,3 @@ pipeline:
     args:
       - type: int
         value: 10
-           
-      

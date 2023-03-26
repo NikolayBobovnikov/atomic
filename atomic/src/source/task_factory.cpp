@@ -1,3 +1,4 @@
+#include <iostream>
 #include <exception>
 #include <algorithm>
 #include <unordered_map>
@@ -16,6 +17,22 @@ using namespace std;
 namespace
 {
   using namespace Quant;
+
+  void log(Settings::Task task)
+  {
+    cout << "Creating task " << task.name << endl
+         << "input: " << task.input_type << endl
+         << "output: " << task.output_type << endl
+         << "arguments: [ ";
+
+    for (const auto &s : task.args)
+    {
+      cout << s.value;
+      cout << " ";
+    }
+
+    cout << "]" << endl;
+  }
 
   unique_ptr<TaskProcessor> make_task_processor(string task_name)
   {
@@ -70,6 +87,7 @@ namespace Quant
 
   std::unique_ptr<Task> TaskFactory::Create(Settings::Task settings)
   {
+    log(settings);
     return Create(IOTypeHelper::parse_type_index(settings.input_type),
                   IOTypeHelper::parse_type_index(settings.output_type),
                   settings.name,

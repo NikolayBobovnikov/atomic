@@ -7,15 +7,21 @@
 
 using namespace std;
 
+namespace
+{
+    using namespace Quant;
+    void log(Settings::Pipeline settings)
+    {
+        cout << "Creating pipeline " << settings.input_type << " ->" << settings.output_type << endl;
+    }
+}
 namespace Quant
 {
-    using namespace std;
-
     PipelineFactory::~PipelineFactory() = default;
 
     unique_ptr<Pipeline> PipelineFactory::Create(Settings::Pipeline settings)
     {
-        cout << "Creating pipeline from the settings" << endl;
+        log(settings);
         auto pipeline = make_unique<Pipeline>();
         pipeline->set_in_type(IOTypeHelper::parse_type_index(settings.input_type));
         pipeline->set_out_type(IOTypeHelper::parse_type_index(settings.output_type));
@@ -24,6 +30,7 @@ namespace Quant
         {
             auto task = TaskFactory::Create(task_settings);
             pipeline->add_task(move(task));
+            cout << endl;
         }
 
         return pipeline;

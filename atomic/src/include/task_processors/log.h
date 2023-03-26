@@ -14,6 +14,7 @@ namespace Quant
                 return std::visit(overload{
                                       [&](auto input, auto value) -> data_t
                                       {
+                                          // TODO: check log formula
                                           return std::log(input) / std::log(value);
                                       },
                                   },
