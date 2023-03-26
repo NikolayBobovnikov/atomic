@@ -39,7 +39,7 @@ namespace
         // task input type is optional. Will be deduced if not specified
         if (task[input_type])
         {
-          task_settings.input_type = yaml[input_type].as<std::string>();
+          task_settings.input_type = task[input_type].as<std::string>();
         }
 
         task_settings.output_type = task[output_type].as<string>();
