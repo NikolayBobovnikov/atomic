@@ -43,7 +43,7 @@ namespace Quant
 
   data_t Pipeline::process(data_t data) const
   {
-    cout << "Processing input " + IOTypeHelper::to_string(data) << endl;
+    cout << "Run on input: " + IOTypeHelper::to_string(data) << endl;
 
     // if pipeline contains no tasks, return unmodified
     if (tasks.size() == 0)
@@ -58,9 +58,9 @@ namespace Quant
     // save results in place
     for (const auto &task : tasks)
     {
-      cout << "Run task" + task->name() + " on data: " << IOTypeHelper::to_string(data) << endl;
+      cout << task->name() + ": " << IOTypeHelper::to_string(data);
       data = task->process(data);
-      cout << "Result: " << IOTypeHelper::to_string(data) << endl;
+      cout << " -> " << IOTypeHelper::to_string(data) << endl;
     }
 
     return data;
