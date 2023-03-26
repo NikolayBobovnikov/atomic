@@ -20,45 +20,11 @@ namespace
 
   namespace
   {
-    using namespace Quant::Settings;
+    using namespace Quant;
 
-    void match_type(const YAML::Node &node)
+    Settings::Pipeline load(const std::filesystem::path &path_to_config)
     {
-      switch (node.Type())
-      {
-      case YAML::NodeType::Null:
-      {
-        break;
-      }
-      case YAML::NodeType::Scalar:
-      {
-        break;
-      }
-      case YAML::NodeType::Sequence:
-      {
-        for (auto s : task)
-        {
-          auto a = s;
-        }
-        break;
-      }
-      case YAML::NodeType::Map:
-      {
-        for (auto n : node)
-        {
-          auto first = n.first;
-          auto second = n.second;
-          auto key = first.as<string>();
-          // auto s2 = second.as<string>();
-        }
-        break;
-      }
-      }
-    }
-
-    Pipeline load(const std::filesystem::path &path_to_config)
-    {
-      Pipeline settings;
+      Settings::Pipeline settings;
 
       YAML::Node yaml = YAML::LoadFile(path_to_config.string());
 
@@ -67,9 +33,15 @@ namespace
 
       for (const auto &task : yaml[pipeline])
       {
-        Task task_settings;
+        Settings::Task task_settings;
         task_settings.name = task[name].as<string>();
-        task_settings.input_type = task[input_type].as<string>();
+
+        // task input type is optional. Will be deduced if not specified
+        if (task[input_type])
+        {
+          task_settings.input_type = yaml[input_type].as<std::string>();
+        }
+
         task_settings.output_type = task[output_type].as<string>();
 
         // fill unnamed arguments
@@ -92,9 +64,9 @@ namespace
   }
 }
 
-Pipeline PipelineSettingsLoader::Load(const std::filesystem::path &path_to_config)
+Settings::Pipeline PipelineSettingsLoader::Load(const std::filesystem::path &path_to_config)
 {
-  Pipeline settings;
+  Settings::Pipeline settings;
 
   try
   {

@@ -23,6 +23,8 @@ namespace Quant
     ~Task(); // define where pipml type is complete
 
     virtual data_t process(data_t) const override;
+    virtual void set_in_type(std::type_index) override;
+
     const std::string &name() const;
     void set_processor(std::unique_ptr<TaskProcessor> processor);
 

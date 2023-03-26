@@ -12,6 +12,11 @@ namespace Quant
         transform(s.begin(), s.end(), s.begin(), [](unsigned char c)
                   { return tolower(c); });
 
+        if (s.empty() || s == "void")
+        {
+            // if not defined
+            return typeid(void);
+        }
         if (s == "int")
         {
             return typeid(int);
@@ -30,5 +35,14 @@ namespace Quant
         }
 
         throw invalid_argument("Type is not supported: " + s);
+    }
+
+    string IOTypeHelper::to_string(data_t data)
+    {
+        return visit(overload{
+                         [](auto value) -> string
+                         { return std::to_string(value); },
+                     },
+                     data);
     }
 }

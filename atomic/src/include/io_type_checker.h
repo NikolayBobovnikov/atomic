@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <typeindex>
 #include "io_types.h"
 
 namespace Quant
@@ -18,6 +19,11 @@ namespace Quant
         {
             std::get<T>(data);
         }
+    };
+
+    struct DefaultDataTypeChecker : IDataTypeChecker
+    {
+        void check(data_t data) const override {}
     };
 
     // TODO
@@ -39,9 +45,9 @@ namespace Quant
     {
         virtual ~IOTypeChecker() = default;
 
-        void set_input_checker(std::unique_ptr<IDataTypeChecker>);
+        void set_input_checker(std::type_index);
 
-        void set_output_checker(std::unique_ptr<IDataTypeChecker>);
+        void set_output_checker(std::type_index);
 
         void check_input(data_t data) const;
 

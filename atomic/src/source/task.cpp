@@ -1,11 +1,12 @@
 #include <memory>
 #include "task.h"
+#include <typeindex>
 #include "task_processor.h"
+
+using namespace std;
 
 namespace Quant
 {
-  using namespace std;
-
   Task::Task() = default;
 
   Task::Task(
@@ -24,6 +25,15 @@ namespace Quant
     auto output = m_processor->process(data);
     check_output(output);
     return output;
+  }
+
+  void Task::set_in_type(std::type_index type)
+  {
+    IOTypeInfo::set_in_type(type);
+    if (is_input_type_defined())
+    {
+      set_input_checker(type);
+    }
   }
 
   void Task::set_processor(std::unique_ptr<TaskProcessor> processor)

@@ -17,30 +17,6 @@ namespace
 {
   using namespace Quant;
 
-  unique_ptr<IDataTypeChecker> make_data_checker(type_index ti)
-  {
-    static const string type_not_supported_prfix = "Type is not supported: ";
-
-    if (ti == type_index(typeid(int)))
-    {
-      return make_unique<DataTypeChecker<int>>();
-    }
-    if (ti == type_index(typeid(size_t)))
-    {
-      return make_unique<DataTypeChecker<size_t>>();
-    }
-    if (ti == type_index(typeid(float)))
-    {
-      return make_unique<DataTypeChecker<float>>();
-    }
-    if (ti == type_index(typeid(double)))
-    {
-      return make_unique<DataTypeChecker<double>>();
-    }
-
-    throw invalid_argument(type_not_supported_prfix + ti.name());
-  }
-
   unique_ptr<TaskProcessor> make_task_processor(string task_name)
   {
     if (task_name == "add")
@@ -85,8 +61,8 @@ namespace Quant
     task_processor->set_parameters(task_params);
 
     auto task = make_unique<Task>(input_type, output_type, task_name);
-    task->set_input_checker(make_data_checker(input_type));
-    task->set_output_checker(make_data_checker(output_type));
+    task->set_input_checker(input_type);
+    task->set_output_checker(output_type);
     task->set_processor(move(task_processor));
 
     return task;

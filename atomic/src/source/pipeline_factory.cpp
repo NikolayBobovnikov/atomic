@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdexcept>
 #include <io_type_helper.h>
 #include "pipeline_factory.h"
@@ -14,6 +15,7 @@ namespace Quant
 
     unique_ptr<Pipeline> PipelineFactory::Create(Settings::Pipeline settings)
     {
+        cout << "Creating pipeline from the settings" << endl;
         auto pipeline = make_unique<Pipeline>();
         pipeline->set_in_type(IOTypeHelper::parse_type_index(settings.input_type));
         pipeline->set_out_type(IOTypeHelper::parse_type_index(settings.output_type));

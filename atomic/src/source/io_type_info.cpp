@@ -45,4 +45,13 @@ namespace Quant
         return m_output_type_index;
     }
 
+    bool IOTypeInfo::is_input_type_defined() const
+    {
+        return m_input_type_index != typeid(void);
+    }
+    bool IOTypeInfo::is_output_type_defined() const
+    {
+        return m_output_type_index != typeid(void);
+        ;
+    }
 }
