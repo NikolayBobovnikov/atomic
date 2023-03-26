@@ -4,3 +4,6 @@
 [submodule "atomic/standalone/extern/yaml-cpp"]
 	path = atomic/standalone/extern/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "atomic2/server/extern/sqlite"]
+	path = atomic2/server/extern/sqlite
+	url = https://github.com/SRombauts/SQLiteCpp.git
