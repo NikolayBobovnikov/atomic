@@ -12,6 +12,9 @@
 #include <grpcpp/server_builder.h>
 #include <grpcpp/server_context.h>
 
+#include "database.h"
+#include "sqlite_orm/sqlite_orm.h"
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -190,6 +193,20 @@ private:
 
 void RunServer(const std::string &db_path) {
   std::string server_address("0.0.0.0:50051");
+
+  using namespace sqlite_orm;
+
+  auto storage = make_storage(
+      db_path,
+      make_table(
+          "employees",
+          make_column("id", &DB::Employee::id, primary_key().autoincrement()),
+          make_column("manager_id", &DB::Employee::manager_id),
+          make_column("name", &DB::Employee::name),
+          make_column("position", &DB::Employee::position),
+          make_table("managers", make_column("id", &DB::Manager::id,
+                                             primary_key().autoincrement()))));
+
   RouteGuideImpl service(db_path);
 
   ServerBuilder builder;

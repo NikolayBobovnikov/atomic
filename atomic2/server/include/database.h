@@ -43,7 +43,7 @@ struct Manager {
   size_t id;
 };
 
-auto initDatabase(const std::string &database) {
+static auto initDatabase(const std::string &database) {
   using namespace sqlite_orm;
   using namespace DB;
   return make_storage(
@@ -74,7 +74,7 @@ struct IEmployeesDb {
 };
 
 struct SQLiteDb : IEmployeesDb {
-  SQLiteDb(const std::string &db);
+  SQLiteDb(const Storage &storage);
   void insert_employee(const Employee &e) const override;
   TestEmployee get_employee(size_t emp_id) const override;
   std::vector<Employee> get_employees(size_t emp_id) const override;
@@ -83,5 +83,7 @@ struct SQLiteDb : IEmployeesDb {
   void set_employee_position(size_t emp_id) const override;
   void set_employee_manager(size_t emp_id) const override;
   void delete_employee(size_t emp_id) const override;
+
+  const Storage &m_storage;
 };
 } // namespace DB
