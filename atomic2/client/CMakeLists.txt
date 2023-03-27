@@ -27,7 +27,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${ProtoIncludeDir})
 
 target_link_libraries(${PROJECT_NAME}
     grpc_proto
-    helper
     ${_REFLECTION}
     ${_GRPC_GRPCPP}
     ${_PROTOBUF_LIBPROTOBUF})

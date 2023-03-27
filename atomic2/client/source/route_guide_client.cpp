@@ -16,21 +16,18 @@
  *
  */
 
-#include <chrono>
-#include <iostream>
-#include <memory>
-#include <random>
-#include <string>
-#include <thread>
-
-#include "helper.h"
-
 #include "employee.grpc.pb.h"
+#include <chrono>
 #include <grpc/grpc.h>
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>
 #include <grpcpp/create_channel.h>
 #include <grpcpp/security/credentials.h>
+#include <iostream>
+#include <memory>
+#include <random>
+#include <string>
+#include <thread>
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -70,9 +67,7 @@ RouteNote MakeRouteNote(const std::string &message, long latitude,
 class RouteGuideClient {
 public:
   RouteGuideClient(std::shared_ptr<Channel> channel, const std::string &db)
-      : stub_(Employees::NewStub(channel)) {
-    workers::ParseDb(db, &feature_list_);
-  }
+      : stub_(Employees::NewStub(channel)) {}
 
   void GetFeature() {
     Point point;
@@ -212,8 +207,9 @@ private:
 };
 
 int main(int argc, char **argv) {
-  // Expect only arg: --db_path=path/to/route_guide_db.json.
-  std::string db = workers::GetDbFileContent(argc, argv);
+  // TODO
+  std::string db = "path to db";
+
   RouteGuideClient guide(
       grpc::CreateChannel("localhost:50051",
                           grpc::InsecureChannelCredentials()),

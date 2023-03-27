@@ -73,16 +73,6 @@ target_link_libraries(grpc_proto
   ${_GRPC_GRPCPP}
   ${_PROTOBUF_LIBPROTOBUF})
 
-# common lib
-add_library(helper
-  "${CMAKE_CURRENT_SOURCE_DIR}/common/include/helper.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/common/source/helper.cpp")
-target_link_libraries(helper
-  grpc_proto
-  ${_REFLECTION}
-  ${_GRPC_GRPCPP}
-  ${_PROTOBUF_LIBPROTOBUF})
-
 # Include generated *.pb.h files
 set(ProtoIncludeDir "${CMAKE_CURRENT_BINARY_DIR}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")

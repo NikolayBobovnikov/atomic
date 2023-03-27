@@ -43,10 +43,9 @@ struct Manager {
   size_t id;
 };
 
-auto initDatabase() {
+auto initDatabase(const std::string &database) {
   using namespace sqlite_orm;
   using namespace DB;
-  const std::string database = "employees.db";
   return make_storage(
       database,
       make_table(

@@ -1,29 +1,9 @@
-/*
- *
- * Copyright 2015 gRPC authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 #include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <iostream>
 #include <memory>
 #include <string>
-
-#include "helper.h"
 
 #include "employee.grpc.pb.h"
 #include <grpc/grpc.h>
@@ -83,9 +63,7 @@ std::string GetFeatureName(const Point &point,
 
 class RouteGuideImpl final : public Employees::Service {
 public:
-  explicit RouteGuideImpl(const std::string &db) {
-    workers::ParseDb(db, &feature_list_);
-  }
+  explicit RouteGuideImpl(const std::string &db) {}
 
   Status GetEmployee(ServerContext *context, const workers::EmployeeId *request,
                      workers::EmployeeId *response) {
@@ -223,8 +201,8 @@ void RunServer(const std::string &db_path) {
 }
 
 int main(int argc, char **argv) {
-  // Expect only arg: --db_path=path/to/route_guide_db.json.
-  std::string db = workers::GetDbFileContent(argc, argv);
+  // TODO
+  std::string db = "path to db";
   RunServer(db);
 
   return 0;
