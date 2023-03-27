@@ -58,7 +58,7 @@ auto initDatabase(const std::string &database) {
                                              primary_key().autoincrement()))));
 }
 
-using Storage = decltype(initDatabase());
+using Storage = decltype(initDatabase(""));
 
 struct IEmployeesDb {
   virtual ~IEmployeesDb() = default;
@@ -74,6 +74,7 @@ struct IEmployeesDb {
 };
 
 struct SQLiteDb : IEmployeesDb {
+  SQLiteDb(const std::string &db);
   void insert_employee(const Employee &e) const override;
   TestEmployee get_employee(size_t emp_id) const override;
   std::vector<Employee> get_employees(size_t emp_id) const override;

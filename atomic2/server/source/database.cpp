@@ -34,6 +34,8 @@ static const string create_managers =
 namespace DB {
 static auto storage = initDatabase("employees.db");
 
+SQLiteDb::SQLiteDb(const std::string &db) {}
+
 void SQLiteDb::insert_employee(const Employee &e) const {}
 TestEmployee SQLiteDb::get_employee(size_t emp_id) const {
   return TestEmployee();
