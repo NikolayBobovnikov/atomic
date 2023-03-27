@@ -1,4 +1,7 @@
+#pragma once
+
 #include "sqlite_orm/sqlite_orm.h"
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
@@ -40,17 +43,45 @@ struct Manager {
   size_t id;
 };
 
-struct SQLiteDb {
-  SQLiteDb() noexcept;
-  void insert_employee(const Employee &e) const;
-  TestEmployee get_employee(size_t emp_id) const;
-  std::vector<Employee> get_employees(size_t emp_id) const;
-  std::string get_employee_position(size_t emp_id) const;
-  std::string get_employee_manager(size_t emp_id) const;
-  void set_employee_position(size_t emp_id) const;
-  void set_employee_manager(size_t emp_id) const;
-  void delete_employee(size_t emp_id) const;
+auto initDatabase() {
+  using namespace sqlite_orm;
+  using namespace DB;
+  const std::string database = "employees.db";
+  return make_storage(
+      database,
+      make_table(
+          "employees",
+          make_column("id", &Employee::id, primary_key().autoincrement()),
+          make_column("manager_id", &Employee::manager_id),
+          make_column("name", &Employee::name),
+          make_column("position", &Employee::position),
+          make_table("managers", make_column("id", &Manager::id,
+                                             primary_key().autoincrement()))));
+}
 
-private:
+using Storage = decltype(initDatabase());
+
+struct IEmployeesDb {
+  virtual ~IEmployeesDb() = default;
+
+  virtual void insert_employee(const Employee &e) const = 0;
+  virtual TestEmployee get_employee(size_t emp_id) const = 0;
+  virtual std::vector<Employee> get_employees(size_t emp_id) const = 0;
+  virtual std::string get_employee_position(size_t emp_id) const = 0;
+  virtual std::string get_employee_manager(size_t emp_id) const = 0;
+  virtual void set_employee_position(size_t emp_id) const = 0;
+  virtual void set_employee_manager(size_t emp_id) const = 0;
+  virtual void delete_employee(size_t emp_id) const = 0;
+};
+
+struct SQLiteDb : IEmployeesDb {
+  void insert_employee(const Employee &e) const override;
+  TestEmployee get_employee(size_t emp_id) const override;
+  std::vector<Employee> get_employees(size_t emp_id) const override;
+  std::string get_employee_position(size_t emp_id) const override;
+  std::string get_employee_manager(size_t emp_id) const override;
+  void set_employee_position(size_t emp_id) const override;
+  void set_employee_manager(size_t emp_id) const override;
+  void delete_employee(size_t emp_id) const override;
 };
 } // namespace DB
