@@ -40,6 +40,7 @@ using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
 using std::chrono::system_clock;
+using workers::Employee;
 using workers::Employees;
 using workers::Feature;
 using workers::Point;
@@ -86,45 +87,46 @@ public:
     workers::ParseDb(db, &feature_list_);
   }
 
-  Status GetEmployee(ServerContext *context,
-                     const ::workers::EmployeeId *request,
-                     ::workers::EmployeeId *response) {
+  Status GetEmployee(ServerContext *context, const workers::EmployeeId *request,
+                     workers::EmployeeId *response) {
     return Status::OK;
   }
   Status InsertEmployee(ServerContext *context,
-                        const ::workers::EmployeeData *request,
-                        ::workers::EmployeeId *response) {
+                        const workers::EmployeeData *request,
+                        workers::EmployeeId *response) {
     return Status::OK;
   }
   Status ListEmployees(ServerContext *context,
-                       const ::workers::ListEmployeesRequest *request,
-                       ServerWriter<::workers::Employee> *writer) {
+                       const workers::ListEmployeesRequest *request,
+                       ServerWriter<workers::Employee> *writer) {
+    for (const workers::Employee &e : m_employee_list) {
+      writer->Write(e);
+    }
     return Status::OK;
   }
   Status GetEmployeePosition(ServerContext *context,
-                             const ::workers::EmployeeId *request,
-                             ::workers::EmployeePosition *response) {
+                             const workers::EmployeeId *request,
+                             workers::EmployeePosition *response) {
     return Status::OK;
   }
   Status GetEmployeeManager(ServerContext *context,
-                            const ::workers::EmployeeId *request,
-                            ::workers::Employee *response) {
+                            const workers::EmployeeId *request,
+                            workers::Employee *response) {
     return Status::OK;
   }
-  Status
-  SetEmployeePosition(ServerContext *context,
-                      const ::workers::SetEmployeePositionRequest *request,
-                      ::workers::SetEmployeePositionResponce *response) {
+  Status SetEmployeePosition(ServerContext *context,
+                             const workers::SetEmployeePositionRequest *request,
+                             workers::SetEmployeePositionResponce *response) {
     return Status::OK;
   }
   Status SetEmployeeManager(ServerContext *context,
-                            const ::workers::SetEmployeeManagerRequest *request,
-                            ::workers::SetEmployeeManagerResponce *response) {
+                            const workers::SetEmployeeManagerRequest *request,
+                            workers::SetEmployeeManagerResponce *response) {
     return Status::OK;
   }
   Status DeleteEmployee(ServerContext *context,
-                        const ::workers::EmployeeId *request,
-                        ::workers::DeleteEmployeeResponce *response) {
+                        const workers::EmployeeId *request,
+                        workers::DeleteEmployeeResponce *response) {
     return Status::OK;
   }
 
@@ -202,6 +204,7 @@ public:
   }
 
 private:
+  std::vector<Employee> m_employee_list;
   std::vector<Feature> feature_list_;
   std::mutex mu_;
   std::vector<RouteNote> received_notes_;
