@@ -86,6 +86,48 @@ public:
     workers::ParseDb(db, &feature_list_);
   }
 
+  Status GetEmployee(ServerContext *context,
+                     const ::workers::EmployeeId *request,
+                     ::workers::EmployeeId *response) {
+    return Status::OK;
+  }
+  Status InsertEmployee(ServerContext *context,
+                        const ::workers::EmployeeData *request,
+                        ::workers::EmployeeId *response) {
+    return Status::OK;
+  }
+  Status ListEmployees(ServerContext *context,
+                       const ::workers::ListEmployeesRequest *request,
+                       ServerWriter<::workers::Employee> *writer) {
+    return Status::OK;
+  }
+  Status GetEmployeePosition(ServerContext *context,
+                             const ::workers::EmployeeId *request,
+                             ::workers::EmployeePosition *response) {
+    return Status::OK;
+  }
+  Status GetEmployeeManager(ServerContext *context,
+                            const ::workers::EmployeeId *request,
+                            ::workers::Employee *response) {
+    return Status::OK;
+  }
+  Status
+  SetEmployeePosition(ServerContext *context,
+                      const ::workers::SetEmployeePositionRequest *request,
+                      ::workers::SetEmployeePositionResponce *response) {
+    return Status::OK;
+  }
+  Status SetEmployeeManager(ServerContext *context,
+                            const ::workers::SetEmployeeManagerRequest *request,
+                            ::workers::SetEmployeeManagerResponce *response) {
+    return Status::OK;
+  }
+  Status DeleteEmployee(ServerContext *context,
+                        const ::workers::EmployeeId *request,
+                        ::workers::DeleteEmployeeResponce *response) {
+    return Status::OK;
+  }
+
   Status GetFeature(ServerContext *context, const Point *point,
                     Feature *feature) override {
     feature->set_name(GetFeatureName(*point, feature_list_));
