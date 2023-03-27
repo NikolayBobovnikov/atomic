@@ -13,7 +13,6 @@
 #include <grpcpp/server_context.h>
 
 #include "database.h"
-#include "sqlite_orm/sqlite_orm.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -66,7 +65,7 @@ std::string GetFeatureName(const Point &point,
 
 class RouteGuideImpl final : public Employees::Service {
 public:
-  explicit RouteGuideImpl(const std::string &db) {}
+  explicit RouteGuideImpl(const DB::SQLiteDb &db) : m_db(db) {}
 
   Status GetEmployee(ServerContext *context, const workers::EmployeeId *request,
                      workers::EmployeeId *response) {
@@ -189,25 +188,16 @@ private:
   std::vector<Feature> feature_list_;
   std::mutex mu_;
   std::vector<RouteNote> received_notes_;
+  const DB::SQLiteDb &m_db;
 };
 
 void RunServer(const std::string &db_path) {
+  using namespace DB;
+
   std::string server_address("0.0.0.0:50051");
+  SQLiteDb sqliteDb(DB::initDatabase(db_path));
 
-  using namespace sqlite_orm;
-
-  auto storage = make_storage(
-      db_path,
-      make_table(
-          "employees",
-          make_column("id", &DB::Employee::id, primary_key().autoincrement()),
-          make_column("manager_id", &DB::Employee::manager_id),
-          make_column("name", &DB::Employee::name),
-          make_column("position", &DB::Employee::position),
-          make_table("managers", make_column("id", &DB::Manager::id,
-                                             primary_key().autoincrement()))));
-
-  RouteGuideImpl service(db_path);
+  RouteGuideImpl service(sqliteDb);
 
   ServerBuilder builder;
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());

@@ -7,10 +7,8 @@ using namespace std;
 using namespace sqlite_orm;
 namespace {
 using namespace DB;
-static const string database = "employees_db";
 static const string employees = "employees";
 static const string managers = "managers";
-static const string database_full_name = database + ".db3";
 
 static const std::string insert_query =
     "INSERT INTO Employees VALUES(1, 'John', 'Software Developer', 2);"
