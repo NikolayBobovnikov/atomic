@@ -63,8 +63,8 @@ int main(int argc, char *argv[])
     cout << e.what() << endl;
 
     // TODO:
-    // cout << "Press any key to exit" << endl;
-    // cin.get();
+    cout << "Press any key to exit" << endl;
+    cin.get();
 
     // In case of exceptions return status code for failure
     return -1;

@@ -28,7 +28,7 @@ namespace
 
       if (filesystem::is_regular_file(fullPath))
       {
-        file = fullPath;
+        file = fullPath.string();
       }
     }
 
