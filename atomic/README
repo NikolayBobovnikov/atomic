@@ -1,4 +1,3 @@
-
 Проект для задачи 1 (конвейерный процессинг данных). 
 Для построения проекта запустить build.sh. Для запуска на входных данных
 
@@ -11,4 +10,51 @@
     Реализованы библиотека и использующая ее CLI. Степень готовности библиотеки - proof of concept: продемонстрирована работа на простых наборах данных включая ошибочные. 
 
 
+    
+Пример запуска CLI с параметрами:
 
+./standalone -i input.txt -o output.txt -c pipeline.yml
+
+
+
+Пример файла настроек с описанием конвейера:
+---
+
+input type: int
+output type: double
+
+pipeline:
+  - name: multiply
+    # input type: int # optional. if not defined, deduced from the pipeline's input or the output of prev task
+    output type: int
+    args:
+      - type: int
+        value: 2
+      
+  - name: add
+    input type: int
+    output type: float
+    args:
+      - type: float
+        value: 0.5
+
+  - name: pow
+    input type: float
+    output type: double
+    args:
+      - type: int
+        value: 2
+
+  - name: log
+    input type: double
+    output type: double
+    args:
+      - type: int
+        value: 7
+
+  - name: avg
+    input type: double
+    output type: double
+    args:
+      - type: int
+        value: 10
