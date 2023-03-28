@@ -148,9 +148,57 @@ public:
     return result;
   }
 
-  void set_employee_position(size_t emp_id, const std::string &position) {}
-  // void set_employee_manager(size_t emp_id, size_t manager_id) {}
-  // void delete_employee(size_t emp_id) {}
+  void set_employee_position(size_t id, const std::string &position)
+  {
+    // Data we are sending to the server.
+    proto::SetEmployeePositionRequest request;
+    request.set_id(id);
+    request.set_position(position);
+
+    // Container for the data we expect from the server.
+    proto::SetEmployeePositionResponce reply;
+
+    // Context for the client. It could be used to convey extra information to
+    // the server and/or tweak certain RPC behaviors.
+    ClientContext context;
+
+    // The actual RPC.
+    Status status = m_stub->SetEmployeePosition(&context, request, &reply);
+  }
+
+  void set_employee_manager(size_t emp_id, size_t manager_id)
+  {
+    // Data we are sending to the server.
+    proto::SetEmployeeManagerRequest request;
+    request.set_id(emp_id);
+    request.set_manager_id(manager_id);
+
+    // Container for the data we expect from the server.
+    proto::SetEmployeeManagerResponce reply;
+
+    // Context for the client. It could be used to convey extra information to
+    // the server and/or tweak certain RPC behaviors.
+    ClientContext context;
+
+    // The actual RPC.
+    Status status = m_stub->SetEmployeeManager(&context, request, &reply);
+  }
+
+  void delete_employee(size_t id)
+  {   // Data we are sending to the server.
+    proto::EmployeeId request;
+    request.set_id(id);
+
+    // Container for the data we expect from the server.
+    proto::DeleteEmployeeResponce reply;
+
+    // Context for the client. It could be used to convey extra information to
+    // the server and/or tweak certain RPC behaviors.
+    ClientContext context;
+
+    // The actual RPC.
+    Status status = m_stub->DeleteEmployee(&context, request, &reply);
+  }
 
 private:
   unique_ptr<Employees::Stub> m_stub;
