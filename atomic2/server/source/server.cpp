@@ -119,7 +119,15 @@ RunServer(const string &db_path, const std::string &server_address)
   using namespace DB;
 
   SQLiteDb db = SQLiteDb(db_path);
-  db.fill_with_test_data();
+
+  try
+  {
+    db.fill_with_test_data();
+  }
+  catch (exception &e)
+  {
+    cout << "Error during filling with test data: " << e.what() << endl;
+  }
 
   EmployeesImpl service(db_path);
   ServerBuilder builder;

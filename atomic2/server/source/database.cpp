@@ -97,8 +97,8 @@ SQLiteDb::fill_with_test_data()
 {
   static const auto names = make_array({"Nikolay", "Sergey", "Pavel", "Olga", "Marina", "Alexander", "Irina"});
   static const auto positions = make_array({"Developer", "Accountant", "Assistent", "Anykey man", "Auditor"});
-  static const size_t employee_count = 100000;
-  static const size_t managers_count = 100;
+  static const size_t employee_count = 100;
+  static const size_t managers_count = 10;
 
   clear();
 

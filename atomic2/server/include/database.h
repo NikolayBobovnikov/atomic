@@ -16,8 +16,9 @@ initDatabase(const std::string &database)
   auto storage = make_storage(
       database, make_table("employees", make_column("id", &EmployeeDTO::id, primary_key().autoincrement()),
                            make_column("manager_id", &EmployeeDTO::manager_id), make_column("name", &EmployeeDTO::name),
-                           make_column("position", &EmployeeDTO::position),
-                           foreign_key(&EmployeeDTO::manager_id).references(&EmployeeDTO::id)));
+                           make_column("position", &EmployeeDTO::position)
+                           //,foreign_key(&EmployeeDTO::manager_id).references(&EmployeeDTO::id)
+                           ));
   storage.sync_schema();
   return storage;
 }
