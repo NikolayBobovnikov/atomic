@@ -5,7 +5,8 @@
 
 using namespace std;
 using namespace sqlite_orm;
-namespace {
+namespace
+{
 using namespace DB;
 static const string employees = "employees";
 static const string managers = "managers";
@@ -26,37 +27,56 @@ static const string create_managers = "CREATE TABLE Managers(manager_id INTEGER 
 }   // namespace
 
 // Main class
-namespace DB {
+namespace DB
+{
 
 SQLiteDb::SQLiteDb(const string &db_path) : m_storage(DB::initDatabase(db_path)) {}
 
 void
-SQLiteDb::insert_employee(const Employee &e) {
-  // m_storage->insert(e);
+SQLiteDb::insert_employee(const Employee &e)
+{
+  m_storage.insert(e);
 }
 
-TestEmployee
-SQLiteDb::get_employee(size_t emp_id) const {
-  return TestEmployee();
+Employee
+SQLiteDb::get_employee(size_t id)
+{
+  return m_storage.get<Employee>(id);
 }
+
 std::vector<Employee>
-SQLiteDb::get_employees(size_t emp_id) const {
-  return {TestEmployee()};
+SQLiteDb::get_employees(size_t emp_id)
+{
+  return m_storage.get_all<Employee>();
 }
 
 std::string
-SQLiteDb::get_employee_position(size_t emp_id) const {
-  TestEmployee e;
-  return e.position;
+SQLiteDb::get_employee_position(size_t id)
+{
+  return get_employee(id).position;
 }
-std::string
-SQLiteDb::get_employee_manager(size_t emp_id) const {
-  return "test manager";
+
+std::optional<size_t>
+SQLiteDb::get_employee_manager_id(size_t id)
+{
+  return get_employee(id).manager_id;
 }
+
 void
-SQLiteDb::set_employee_position(size_t emp_id) const {}
+SQLiteDb::set_employee_position(size_t id, const string &position)
+{
+  m_storage.insert(into<Employee>(), columns(&Employee::id, &Employee::position), values(id, position));
+}
+
 void
-SQLiteDb::set_employee_manager(size_t emp_id) const {}
+SQLiteDb::set_employee_manager(size_t emp_id, size_t manager_id)
+{
+  m_storage.insert(into<Employee>(), columns(&Employee::id, &Employee::manager_id), values(emp_id, manager_id));
+}
+
 void
-SQLiteDb::delete_employee(size_t emp_id) const {}
+SQLiteDb::delete_employee(size_t id)
+{
+  m_storage.remove<Employee>(id);
+}
 }   // namespace DB
