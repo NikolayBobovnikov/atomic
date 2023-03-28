@@ -23,10 +23,19 @@ using proto::Employees;
 
 using namespace std;
 using namespace DB;
+
+namespace
+{
+EmployeeDTO
+from_proto(const proto::Employee &e)
+{
+  return {e.id(), e.manager_id(), e.name(), e.position()};
+}
+}   // namespace
 class EmployeesClient
 {
 public:
-  EmployeesClient(shared_ptr<Channel> channel) : stub_(Employees::NewStub(channel)) {}
+  EmployeesClient(shared_ptr<Channel> channel) : m_stub(Employees::NewStub(channel)) {}
 
   void insert_employee(const EmployeeDTO &e)
   {
@@ -43,7 +52,7 @@ public:
     ClientContext context;
 
     // The actual RPC.
-    Status status = stub_->InsertEmployee(&context, request, &reply);
+    Status status = m_stub->InsertEmployee(&context, request, &reply);
   }
 
   optional<EmployeeDTO> get_employee(size_t id)
@@ -62,7 +71,7 @@ public:
     ClientContext context;
 
     // The actual RPC.
-    Status status = stub_->GetEmployee(&context, request, &reply);
+    Status status = m_stub->GetEmployee(&context, request, &reply);
 
     // Act upon its status.
     if (status.ok())
@@ -73,15 +82,78 @@ public:
     return result;
   }
 
-  // std::vector<EmployeeDTO> get_employees() {}
-  // std::string get_employee_position(size_t emp_id) {}
-  // std::optional<size_t> get_employee_manager_id(size_t emp_id) {}
-  // void set_employee_position(size_t emp_id, const std::string &position) {}
+  std::vector<EmployeeDTO> get_employees()
+  {
+    proto::EmptyMessage request;
+    proto::Employee reply;
+    vector<EmployeeDTO> employees;
+    ClientContext context;
+
+    std::unique_ptr<ClientReader<proto::Employee>> reader(m_stub->ListEmployees(&context, request));
+    while (reader->Read(&reply))
+    {
+      employees.emplace_back(reply.id(), reply.manager_id(), reply.name(), reply.position());
+    }
+
+    Status status = reader->Finish();
+    return employees;
+  }
+
+  optional<string> get_employee_position(size_t id)
+  {
+    optional<string> result;
+
+    // Data we are sending to the server.
+    proto::EmployeeId request;
+    request.set_id(id);
+
+    // Container for the data we expect from the server.
+    proto::EmployeePosition reply;
+
+    // Context for the client. It could be used to convey extra information to
+    // the server and/or tweak certain RPC behaviors.
+    ClientContext context;
+
+    // The actual RPC.
+    Status status = m_stub->GetEmployeePosition(&context, request, &reply);
+
+    // Act upon its status.
+    result = status.ok() ? reply.position() : result;
+
+    return result;
+  }
+
+  optional<EmployeeDTO> get_employee_manager(size_t employee_id)
+  {
+    optional<EmployeeDTO> result;
+
+    // Data we are sending to the server.
+    proto::EmployeeId request;
+    request.set_id(employee_id);
+
+    // Container for the data we expect from the server.
+    proto::Manager reply;
+
+    // Context for the client. It could be used to convey extra information to
+    // the server and/or tweak certain RPC behaviors.
+    ClientContext context;
+
+    // The actual RPC.
+    Status status = m_stub->GetEmployeeManager(&context, request, &reply);
+
+    // Act upon its status.
+    optional<proto::Employee> manager;
+    manager = status.ok() ? reply.employee() : manager;
+    result = manager.has_value() ? from_proto(manager.value()) : result;
+    return result;
+  }
+
+  void set_employee_position(size_t emp_id, const std::string &position) {}
   // void set_employee_manager(size_t emp_id, size_t manager_id) {}
   // void delete_employee(size_t emp_id) {}
 
 private:
-  unique_ptr<Employees::Stub> stub_;
+  unique_ptr<Employees::Stub> m_stub;
 };
 
 int
