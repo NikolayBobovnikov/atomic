@@ -210,15 +210,22 @@ benchmark(size_t requestCount, const std::string &method_name, std::function<voi
 {
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-  for (size_t i = 0; i < requestCount; ++i)
+  try
   {
-    method();
+    for (size_t i = 0; i < requestCount; ++i)
+    {
+      method();
+    }
+  }
+  catch (exception &e)
+  {
+    cout << e.what() << endl;
   }
 
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
   auto seconds = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
-  std::cout << method_name << std::to_string(requestCount / seconds) << " rps" << std::endl;
+  std::cout << method_name << ": " << std::to_string((size_t) (requestCount / seconds)) << " rps" << std::endl;
 }
 
 void
