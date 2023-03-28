@@ -20,14 +20,16 @@ using grpc::ClientWriter;
 using grpc::Status;
 using proto::Employees;
 
+using namespace std;
+
 class EmployeesClient
 {
 public:
-  EmployeesClient(std::shared_ptr<Channel> channel, const std::string &db) : stub_(Employees::NewStub(channel)) {}
+  EmployeesClient(shared_ptr<Channel> channel) : stub_(Employees::NewStub(channel)) {}
 
   // Assembles the client's payload, sends it and presents the response back
   // from the server.
-  std::string InsertEmployee(const std::string &name, const std::string &position)
+  void InsertEmployee(const string &name, const string &position)
   {
     // Data we are sending to the server.
     proto::Employee employee;
@@ -47,22 +49,19 @@ public:
     // Act upon its status.
     if (!status.ok())
     {
-      std::cout << status.error_code() << ": " << status.error_message() << std::endl;
-      return "RPC failed";
+      cout << "RPC failed with code" << status.error_code() << ": " << status.error_message() << endl;
+      return;
     }
   }
 
 private:
-  std::unique_ptr<Employees::Stub> stub_;
+  unique_ptr<Employees::Stub> stub_;
 };
 
 int
 main(int argc, char **argv)
 {
-  // TODO
-  std::string db = "path to db";
-
-  EmployeesClient guide(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()), db);
-
+  EmployeesClient client(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
+  client.InsertEmployee("EmployeeName", "Senior dev");
   return 0;
 }
