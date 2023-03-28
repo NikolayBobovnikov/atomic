@@ -14,10 +14,8 @@ service Employees {
   rpc ListEmployees(ListEmployeesRequest) returns (stream Employee) {}
   rpc GetEmployeePosition(EmployeeId) returns (EmployeePosition) {}
   rpc GetEmployeeManager(EmployeeId) returns (Employee) {}
-  rpc SetEmployeePosition(SetEmployeePositionRequest)
-      returns (SetEmployeePositionResponce) {}
-  rpc SetEmployeeManager(SetEmployeeManagerRequest)
-      returns (SetEmployeeManagerResponce) {}
+  rpc SetEmployeePosition(SetEmployeePositionRequest) returns (SetEmployeePositionResponce) {}
+  rpc SetEmployeeManager(SetEmployeeManagerRequest) returns (SetEmployeeManagerResponce) {}
   rpc DeleteEmployee(EmployeeId) returns (DeleteEmployeeResponce) {}
 
   // A simple RPC.
