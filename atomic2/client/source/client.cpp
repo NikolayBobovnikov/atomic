@@ -1,6 +1,7 @@
 #include "employee.grpc.pb.h"
 #include "employee_dto.h"
 #include <chrono>
+#include <functional>
 #include <grpc/grpc.h>
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>
@@ -37,7 +38,7 @@ class EmployeesClient
 public:
   EmployeesClient(shared_ptr<Channel> channel) : m_stub(Employees::NewStub(channel)) {}
 
-  void insert_employee(const EmployeeDTO &e)
+  void insert_employee(const EmployeeDTO &e) const
   {
     // Data we are sending to the server.
     proto::Employee request;
@@ -55,7 +56,7 @@ public:
     Status status = m_stub->InsertEmployee(&context, request, &reply);
   }
 
-  optional<EmployeeDTO> get_employee(size_t id)
+  optional<EmployeeDTO> get_employee(size_t id) const
   {
     optional<EmployeeDTO> result;
 
@@ -82,7 +83,7 @@ public:
     return result;
   }
 
-  std::vector<EmployeeDTO> get_employees()
+  std::vector<EmployeeDTO> get_employees() const
   {
     proto::EmptyMessage request;
     proto::Employee reply;
@@ -99,7 +100,7 @@ public:
     return employees;
   }
 
-  optional<string> get_employee_position(size_t id)
+  optional<string> get_employee_position(size_t id) const
   {
     optional<string> result;
 
@@ -123,7 +124,7 @@ public:
     return result;
   }
 
-  optional<EmployeeDTO> get_employee_manager(size_t employee_id)
+  optional<EmployeeDTO> get_employee_manager(size_t employee_id) const
   {
     optional<EmployeeDTO> result;
 
@@ -148,7 +149,7 @@ public:
     return result;
   }
 
-  void set_employee_position(size_t id, const std::string &position)
+  void set_employee_position(size_t id, const std::string &position) const
   {
     // Data we are sending to the server.
     proto::SetEmployeePositionRequest request;
@@ -166,7 +167,7 @@ public:
     Status status = m_stub->SetEmployeePosition(&context, request, &reply);
   }
 
-  void set_employee_manager(size_t emp_id, size_t manager_id)
+  void set_employee_manager(size_t emp_id, size_t manager_id) const
   {
     // Data we are sending to the server.
     proto::SetEmployeeManagerRequest request;
@@ -184,7 +185,7 @@ public:
     Status status = m_stub->SetEmployeeManager(&context, request, &reply);
   }
 
-  void delete_employee(size_t id)
+  void delete_employee(size_t id) const
   {   // Data we are sending to the server.
     proto::EmployeeId request;
     request.set_id(id);
@@ -204,10 +205,25 @@ private:
   unique_ptr<Employees::Stub> m_stub;
 };
 
-int
-main(int argc, char **argv)
+void
+benchmark(size_t requestCount, const std::string &method_name, std::function<void(void)> method)
 {
-  EmployeesClient client(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
+  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
+  for (size_t i = 0; i < requestCount; ++i)
+  {
+    method();
+  }
+
+  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+  auto seconds = std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
+  std::cout << method_name << std::to_string(requestCount / seconds) << " rps" << std::endl;
+}
+
+void
+print_employees(const EmployeesClient &client)
+{
   auto employees = client.get_employees();
 
   cout << "Server contains the following employees: " << endl;
@@ -215,5 +231,34 @@ main(int argc, char **argv)
   {
     cout << "Name:" << e.name << ", position: " << e.position << endl;
   }
+}
+
+int
+main(int argc, char **argv)
+{
+  EmployeesClient client(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
+  // print_employees();
+
+  const size_t requestsCount = 1000;
+  size_t id = 0;
+
+  auto get_employee = [&client]() { client.get_employee(1); };
+  auto get_employee_manager = [&]() { client.get_employee_manager(1); };
+  auto get_employee_position = [&]() { client.get_employee_position(1); };
+  auto get_employees = [&]() { client.get_employees(); };
+  auto insert_employee = [&]() { client.insert_employee(TestEmployee()); };
+  auto set_employee_manager = [&]() { client.set_employee_manager(1, 1); };
+  auto set_employee_position = [&]() { client.set_employee_position(1, "New position"); };
+  auto delete_employee = [&]() { client.delete_employee(++id); };
+
+  benchmark(requestsCount, "get_employee", get_employee);
+  benchmark(requestsCount, "get_employee_manager", get_employee_manager);
+  benchmark(requestsCount, "get_employee_position", get_employee_position);
+  benchmark(requestsCount, "get_employees", get_employees);
+  benchmark(requestsCount, "insert_employee", insert_employee);
+  benchmark(requestsCount, "set_employee_manager", set_employee_manager);
+  benchmark(requestsCount, "set_employee_position", set_employee_position);
+  benchmark(requestsCount, "set_employee_position", set_employee_position);
+
   return 0;
 }
