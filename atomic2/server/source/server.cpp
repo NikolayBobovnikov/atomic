@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -128,9 +129,10 @@ RunServer(const string &db_path, const std::string &server_address)
 int
 main(int argc, char **argv)
 {
-  string db = "employees.db";
+  static const string db_name = "employees.db";
+  string db_path = filesystem::path(argv[0]).parent_path() /= db_name;
   string address("0.0.0.0:50051");
-  RunServer(db, address);
+  RunServer(db_path, address);
 
   return 0;
 }

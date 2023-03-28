@@ -52,6 +52,7 @@ public:
       cout << "RPC failed with code" << status.error_code() << ": " << status.error_message() << endl;
       return;
     }
+    cout << "OK" << endl;
   }
 
 private:
