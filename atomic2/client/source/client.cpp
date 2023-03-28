@@ -208,6 +208,12 @@ int
 main(int argc, char **argv)
 {
   EmployeesClient client(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
-  client.insert_employee(TestEmployee());
+  auto employees = client.get_employees();
+
+  cout << "Server contains the following employees: " << endl;
+  for (const auto &e : employees)
+  {
+    cout << "Name:" << e.name << ", position: " << e.position << endl;
+  }
   return 0;
 }
