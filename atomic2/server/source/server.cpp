@@ -21,9 +21,9 @@ using grpc::ServerReader;
 using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
+using proto::Employee;
+using proto::Employees;
 using std::chrono::system_clock;
-using workers::Employee;
-using workers::Employees;
 
 using namespace std;
 using namespace std::chrono;
@@ -33,24 +33,24 @@ class EmployeesImpl final : public Employees::Service
 public:
   explicit EmployeesImpl(const string &db_path) : m_db(db_path) {}
 
-  Status GetEmployee(ServerContext *context, const workers::EmployeeId *request, workers::EmployeeId *response)
+  Status GetEmployee(ServerContext *context, const proto::EmployeeId *request, proto::EmployeeId *response)
   {
     m_db.get_employee(request->id());
     return Status::OK;
   }
 
-  Status InsertEmployee(ServerContext *context, const workers::Employee *request, workers::EmployeeId *response)
+  Status InsertEmployee(ServerContext *context, const proto::Employee *request, proto::EmployeeId *response)
   {
     response->set_id(m_db.insert_employee({request->name(), request->position()}));
     return Status::OK;
   }
 
-  Status ListEmployees(ServerContext *context, const workers::EmptyMessage *request,
-                       ServerWriter<workers::Employee> *writer)
+  Status ListEmployees(ServerContext *context, const proto::EmptyMessage *request,
+                       ServerWriter<proto::Employee> *writer)
   {
     for (const auto &e : m_db.get_employees())
     {
-      workers::Employee we;
+      proto::Employee we;
       we.set_id(e.id);
       we.set_name(e.name);
       we.set_position(e.position);
@@ -65,14 +65,14 @@ public:
     return Status::OK;
   }
 
-  Status GetEmployeePosition(ServerContext *context, const workers::EmployeeId *request,
-                             workers::EmployeePosition *response)
+  Status GetEmployeePosition(ServerContext *context, const proto::EmployeeId *request,
+                             proto::EmployeePosition *response)
   {
     response->set_position(m_db.get_employee_position(request->id()));
     return Status::OK;
   }
 
-  Status GetEmployeeManager(ServerContext *context, const workers::EmployeeId *request, workers::Employee *response)
+  Status GetEmployeeManager(ServerContext *context, const proto::EmployeeId *request, proto::Employee *response)
   {
     auto manager_id = m_db.get_employee_manager_id(request->id());
     if (manager_id.has_value())
@@ -83,24 +83,24 @@ public:
     return Status::OK;
   }
 
-  Status SetEmployeePosition(ServerContext *context, const workers::SetEmployeePositionRequest *request,
-                             workers::SetEmployeePositionResponce *response)
+  Status SetEmployeePosition(ServerContext *context, const proto::SetEmployeePositionRequest *request,
+                             proto::SetEmployeePositionResponce *response)
   {
     m_db.set_employee_position(request->id(), request->position());
 
     return Status::OK;
   }
 
-  Status SetEmployeeManager(ServerContext *context, const workers::SetEmployeeManagerRequest *request,
-                            workers::SetEmployeeManagerResponce *response)
+  Status SetEmployeeManager(ServerContext *context, const proto::SetEmployeeManagerRequest *request,
+                            proto::SetEmployeeManagerResponce *response)
   {
     m_db.set_employee_manager(request->id(), request->manager_id());
 
     return Status::OK;
   }
 
-  Status DeleteEmployee(ServerContext *context, const workers::EmployeeId *request,
-                        workers::DeleteEmployeeResponce *response)
+  Status DeleteEmployee(ServerContext *context, const proto::EmployeeId *request,
+                        proto::DeleteEmployeeResponce *response)
   {
     m_db.delete_employee(request->id());
     return Status::OK;

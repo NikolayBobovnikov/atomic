@@ -1,39 +1,14 @@
 #pragma once
 
+#include "employee.h"
 #include "sqlite_orm/sqlite_orm.h"
 #include <memory>
 #include <optional>
 #include <string>
 #include <vector>
 
-/*
-• добавить сотрудника;
-• запросить список сотрудников;
-• запросить должность и руководителя сотрудника;
-• задать для сотрудника должность;
-• задать для сотрудника руководителя;
-• удалить сотрудника.
-*/
-
 namespace DB
 {
-static const std::string create_employees = "CREATE TABLE employees(id INTEGER PRIMARY KEY, name TEXT NOT NULL, "
-                                            "position TEXT NOT NULL, manager_id INTEGER);";
-
-static const std::string create_managers = "CREATE TABLE managers(id INTEGER PRIMARY KEY, name TEXT NOT NULL, "
-                                           "position TEXT NOT NULL);";
-
-struct Employee
-{
-  Employee() = default;
-  Employee(const std::string &_name, const std::string &_position) : name(_name), position(_position) {}
-
-  size_t id;
-  std::optional<size_t> manager_id;   // must map to id
-  std::string name;
-  std::string position;
-};
-
 struct TestEmployee : Employee
 {
   TestEmployee() : Employee("Test employee name", "Test position") {}

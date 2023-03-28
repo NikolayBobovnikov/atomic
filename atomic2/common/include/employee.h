@@ -1,0 +1,18 @@
+#pragma once
+
+#include <optional>
+#include <string>
+
+namespace DB
+{
+struct Employee
+{
+  Employee() = default;
+  Employee(const std::string &_name, const std::string &_position) : name(_name), position(_position) {}
+
+  size_t id;
+  std::optional<size_t> manager_id;   // must map to id
+  std::string name;
+  std::string position;
+};
+}   // namespace DB
