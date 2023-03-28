@@ -1,5 +1,6 @@
 #include "database.h"
 #include "sqlite_orm/sqlite_orm.h"
+#include <array>
 #include <iostream>
 #include <string>
 
@@ -24,13 +25,23 @@ static const string create_employees = "CREATE TABLE Employees(id INTEGER PRIMAR
 
 static const string create_managers = "CREATE TABLE Managers(manager_id INTEGER PRIMARY KEY,"
                                       "FOREIGN KEY(manager_id) REFERENCES Employees(id));";
+
+template <typename T, size_t N> auto constexpr make_array(T const (&input)[N])
+{
+  array<T, N> arr;
+  for (size_t i = 0; i < N; ++i)
+    arr[i] = input[i];
+
+  return arr;
+}
+
 }   // namespace
 
 // Main class
 namespace DB
 {
 
-SQLiteDb::SQLiteDb(const string &db_path) : m_storage(DB::initDatabase(db_path)) {}
+SQLiteDb::SQLiteDb(const string &db_path) : m_storage(initDatabase(db_path)) {}
 
 size_t
 SQLiteDb::insert_employee(const EmployeeDTO &e)
@@ -79,5 +90,53 @@ void
 SQLiteDb::delete_employee(size_t id)
 {
   m_storage.remove<EmployeeDTO>(id);
+}
+
+void
+SQLiteDb::fill_with_test_data()
+{
+  static const auto names = make_array({"Nikolay", "Sergey", "Pavel", "Olga", "Marina", "Alexander", "Irina"});
+  static const auto positions = make_array({"Developer", "Accountant", "Assistent", "Anykey man", "Auditor"});
+  static const size_t employee_count = 100000;
+  static const size_t managers_count = 100;
+
+  clear();
+
+  // fill managers
+  size_t name_pos{};
+  for (size_t i = 0; i < managers_count; ++i)
+  {
+    EmployeeDTO e;
+    name_pos = name_pos < names.size() - 1 ? name_pos + 1 : 0;
+    e.name = names[name_pos];
+    e.position = "Manager";
+    insert_employee(e);
+  }
+
+  // fill employees
+  size_t position_pos{};
+  size_t manager_pos{};
+  for (size_t i = 0; i < employee_count; ++i)
+  {
+    EmployeeDTO e;
+    name_pos = name_pos < names.size() - 1 ? name_pos + 1 : 0;
+    position_pos = position_pos < positions.size() - 1 ? position_pos + 1 : 0;
+    manager_pos = manager_pos < managers_count - 1 ? manager_pos + 1 : 0;
+
+    e.name = names[name_pos];
+    e.position = positions[position_pos];
+    e.manager_id = manager_pos;
+
+    insert_employee(e);
+  }
+
+  // SELECT COUNT(*)
+  auto db_size = m_storage.select(count<EmployeeDTO>());
+}
+
+void
+SQLiteDb::clear()
+{
+  m_storage.remove_all<EmployeeDTO>();
 }
 }   // namespace DB

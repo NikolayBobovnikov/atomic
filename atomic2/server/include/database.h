@@ -50,6 +50,9 @@ struct SQLiteDb : IEmployeeRepository
   void set_employee_manager(size_t emp_id, size_t manager_id) override;
   void delete_employee(size_t emp_id) override;
 
+  void fill_with_test_data();
+  void clear();
+
   Storage m_storage;
 };
 }   // namespace DB

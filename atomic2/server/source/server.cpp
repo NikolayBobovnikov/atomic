@@ -118,6 +118,9 @@ RunServer(const string &db_path, const std::string &server_address)
 {
   using namespace DB;
 
+  SQLiteDb db = SQLiteDb(db_path);
+  db.fill_with_test_data();
+
   EmployeesImpl service(db_path);
   ServerBuilder builder;
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
