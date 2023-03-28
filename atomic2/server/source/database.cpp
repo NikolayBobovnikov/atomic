@@ -33,21 +33,21 @@ namespace DB
 SQLiteDb::SQLiteDb(const string &db_path) : m_storage(DB::initDatabase(db_path)) {}
 
 size_t
-SQLiteDb::insert_employee(const Employee &e)
+SQLiteDb::insert_employee(const EmployeeDTO &e)
 {
   return m_storage.insert(e);
 }
 
-Employee
+EmployeeDTO
 SQLiteDb::get_employee(size_t id)
 {
-  return m_storage.get<Employee>(id);
+  return m_storage.get<EmployeeDTO>(id);
 }
 
-std::vector<Employee>
+std::vector<EmployeeDTO>
 SQLiteDb::get_employees()
 {
-  return m_storage.get_all<Employee>();
+  return m_storage.get_all<EmployeeDTO>();
 }
 
 std::string
@@ -65,18 +65,19 @@ SQLiteDb::get_employee_manager_id(size_t id)
 void
 SQLiteDb::set_employee_position(size_t id, const string &position)
 {
-  m_storage.insert(into<Employee>(), columns(&Employee::id, &Employee::position), values(id, position));
+  m_storage.insert(into<EmployeeDTO>(), columns(&EmployeeDTO::id, &EmployeeDTO::position), values(id, position));
 }
 
 void
 SQLiteDb::set_employee_manager(size_t emp_id, size_t manager_id)
 {
-  m_storage.insert(into<Employee>(), columns(&Employee::id, &Employee::manager_id), values(emp_id, manager_id));
+  m_storage.insert(into<EmployeeDTO>(), columns(&EmployeeDTO::id, &EmployeeDTO::manager_id),
+                   values(emp_id, manager_id));
 }
 
 void
 SQLiteDb::delete_employee(size_t id)
 {
-  m_storage.remove<Employee>(id);
+  m_storage.remove<EmployeeDTO>(id);
 }
 }   // namespace DB

@@ -112,15 +112,9 @@ private:
 };
 
 void
-RunServer(const string &db_path)
+RunServer(const string &db_path, const std::string &server_address)
 {
   using namespace DB;
-
-  string server_address("0.0.0.0:50051");
-  DB::Employee e = DB::TestEmployee();
-
-  auto storage = DB::initDatabase(db_path);
-  storage.insert(e);
 
   EmployeesImpl service(db_path);
   ServerBuilder builder;
@@ -135,7 +129,8 @@ int
 main(int argc, char **argv)
 {
   string db = "employees.db";
-  RunServer(db);
+  string address("0.0.0.0:50051");
+  RunServer(db, address);
 
   return 0;
 }

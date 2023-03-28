@@ -5,10 +5,10 @@
 
 namespace DB
 {
-struct Employee
+struct EmployeeDTO
 {
-  Employee() = default;
-  Employee(const std::string &_name, const std::string &_position) : name(_name), position(_position) {}
+  EmployeeDTO() = default;
+  EmployeeDTO(const std::string &_name, const std::string &_position) : name(_name), position(_position) {}
 
   size_t id;
   std::optional<size_t> manager_id;   // must map to id
