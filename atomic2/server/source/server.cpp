@@ -14,6 +14,7 @@
 #include <grpcpp/server_context.h>
 
 #include "database.h"
+#include "employee_dto.h"
 
 using grpc::Server;
 using grpc::ServerBuilder;

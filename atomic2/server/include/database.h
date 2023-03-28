@@ -1,6 +1,6 @@
 #pragma once
 
-#include "employee.h"
+#include "employee_dto.h"
 #include "sqlite_orm/sqlite_orm.h"
 #include <memory>
 #include <optional>
@@ -9,11 +9,6 @@
 
 namespace DB
 {
-struct TestEmployee : EmployeeDTO
-{
-  TestEmployee() : EmployeeDTO("Test employee name", "Test position") {}
-};
-
 static auto
 initDatabase(const std::string &database)
 {

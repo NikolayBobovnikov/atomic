@@ -5,7 +5,6 @@
 
 namespace DB
 {
-static const std::string databaseFile{"Employees.db"};
 struct EmployeeDTO
 {
   EmployeeDTO() = default;
@@ -16,4 +15,10 @@ struct EmployeeDTO
   std::string name;
   std::string position;
 };
+
+struct TestEmployee : EmployeeDTO
+{
+  TestEmployee() : EmployeeDTO("Test employee name", "Test position") {}
+};
+
 }   // namespace DB
