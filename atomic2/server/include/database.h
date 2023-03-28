@@ -58,9 +58,9 @@ struct IEmployeeRepository
 {
   virtual ~IEmployeeRepository() = default;
 
-  virtual void insert_employee(const Employee &e) = 0;
+  virtual size_t insert_employee(const Employee &e) = 0;
   virtual Employee get_employee(size_t emp_id) = 0;
-  virtual std::vector<Employee> get_employees(size_t emp_id) = 0;
+  virtual std::vector<Employee> get_employees() = 0;
   virtual std::string get_employee_position(size_t emp_id) = 0;
   virtual std::optional<size_t> get_employee_manager_id(size_t emp_id) = 0;
   virtual void set_employee_position(size_t emp_id, const std::string &position) = 0;
@@ -71,9 +71,9 @@ struct IEmployeeRepository
 struct SQLiteDb : IEmployeeRepository
 {
   SQLiteDb(const std::string &db_path);
-  void insert_employee(const Employee &e) override;
+  size_t insert_employee(const Employee &e) override;
   Employee get_employee(size_t emp_id) override;
-  std::vector<Employee> get_employees(size_t emp_id) override;
+  std::vector<Employee> get_employees() override;
   std::string get_employee_position(size_t emp_id) override;
   std::optional<size_t> get_employee_manager_id(size_t emp_id) override;
   void set_employee_position(size_t emp_id, const std::string &position) override;

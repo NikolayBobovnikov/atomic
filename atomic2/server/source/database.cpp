@@ -32,10 +32,10 @@ namespace DB
 
 SQLiteDb::SQLiteDb(const string &db_path) : m_storage(DB::initDatabase(db_path)) {}
 
-void
+size_t
 SQLiteDb::insert_employee(const Employee &e)
 {
-  m_storage.insert(e);
+  return m_storage.insert(e);
 }
 
 Employee
@@ -45,7 +45,7 @@ SQLiteDb::get_employee(size_t id)
 }
 
 std::vector<Employee>
-SQLiteDb::get_employees(size_t emp_id)
+SQLiteDb::get_employees()
 {
   return m_storage.get_all<Employee>();
 }

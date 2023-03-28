@@ -80,21 +80,30 @@ public:
 
   Status GetEmployee(ServerContext *context, const workers::EmployeeId *request, workers::EmployeeId *response)
   {
+    m_db.get_employee(request->id());
     return Status::OK;
   }
 
   Status InsertEmployee(ServerContext *context, const workers::EmployeeData *request, workers::EmployeeId *response)
   {
-    m_db.insert_employee({request->name(), request->position()});
+    response->set_id(m_db.insert_employee({request->name(), request->position()}));
     return Status::OK;
   }
 
   Status ListEmployees(ServerContext *context, const workers::ListEmployeesRequest *request,
                        ServerWriter<workers::Employee> *writer)
   {
-    for (const workers::Employee &e : m_employee_list)
+    for (const auto &e : m_db.get_employees())
     {
-      writer->Write(e);
+      workers::Employee we;
+      we.set_id(e.id);
+      if (e.manager_id.has_value())
+      {
+        we.set_manager_id(e.manager_id.value());
+      }
+      we.set_name(e.name);
+      we.set_position(e.position);
+      writer->Write(we);
     }
     return Status::OK;
   }
@@ -102,23 +111,34 @@ public:
   Status GetEmployeePosition(ServerContext *context, const workers::EmployeeId *request,
                              workers::EmployeePosition *response)
   {
+    response->set_position(m_db.get_employee_position(request->id()));
     return Status::OK;
   }
 
   Status GetEmployeeManager(ServerContext *context, const workers::EmployeeId *request, workers::Employee *response)
   {
+    auto manager_id = m_db.get_employee_manager_id(request->id());
+    if (manager_id.has_value())
+    {
+      response->set_manager_id(manager_id.value());
+    }
+
     return Status::OK;
   }
 
   Status SetEmployeePosition(ServerContext *context, const workers::SetEmployeePositionRequest *request,
                              workers::SetEmployeePositionResponce *response)
   {
+    m_db.set_employee_position(request->id(), request->position());
+
     return Status::OK;
   }
 
   Status SetEmployeeManager(ServerContext *context, const workers::SetEmployeeManagerRequest *request,
                             workers::SetEmployeeManagerResponce *response)
   {
+    m_db.set_employee_manager(request->id(), request->manager_id());
+
     return Status::OK;
   }
 
