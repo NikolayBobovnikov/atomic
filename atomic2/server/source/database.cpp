@@ -28,7 +28,7 @@ static const string create_managers = "CREATE TABLE Managers(manager_id INTEGER 
 // Main class
 namespace DB {
 
-SQLiteDb::SQLiteDb(const Storage &db) : m_storage(&db) {}
+SQLiteDb::SQLiteDb(const string &db_path) : m_storage(DB::initDatabase(db_path)) {}
 
 void
 SQLiteDb::insert_employee(const Employee &e) {

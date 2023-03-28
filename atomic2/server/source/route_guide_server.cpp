@@ -34,13 +34,15 @@ using namespace std;
 using namespace std::chrono;
 
 float
-ConvertToRadians(float num) {
+ConvertToRadians(float num)
+{
   return num * 3.1415926 / 180;
 }
 
 // The formula is based on http://mathforum.org/library/drmath/view/51879.html
 float
-GetDistance(const Point &start, const Point &end) {
+GetDistance(const Point &start, const Point &end)
+{
   const float kCoordFactor = 10000000.0;
   float lat_1 = start.latitude() / kCoordFactor;
   float lat_2 = end.latitude() / kCoordFactor;
@@ -59,78 +61,102 @@ GetDistance(const Point &start, const Point &end) {
 }
 
 string
-GetFeatureName(const Point &point, const vector<Feature> &feature_list) {
-  for (const Feature &f : feature_list) {
-    if (f.location().latitude() == point.latitude() && f.location().longitude() == point.longitude()) {
+GetFeatureName(const Point &point, const vector<Feature> &feature_list)
+{
+  for (const Feature &f : feature_list)
+  {
+    if (f.location().latitude() == point.latitude() && f.location().longitude() == point.longitude())
+    {
       return f.name();
     }
   }
   return "";
 }
 
-class RouteGuideImpl final : public Employees::Service {
+class RouteGuideImpl final : public Employees::Service
+{
 public:
-  explicit RouteGuideImpl(const DB::Storage &db) : m_db(db) {}
+  explicit RouteGuideImpl(const string &db_path) : m_db(db_path) {}
 
-  Status GetEmployee(ServerContext *context, const workers::EmployeeId *request, workers::EmployeeId *response) {
+  Status GetEmployee(ServerContext *context, const workers::EmployeeId *request, workers::EmployeeId *response)
+  {
     return Status::OK;
   }
-  Status InsertEmployee(ServerContext *context, const workers::EmployeeData *request, workers::EmployeeId *response) {
 
-    // m_db.insert_employee(request->get);
+  Status InsertEmployee(ServerContext *context, const workers::EmployeeData *request, workers::EmployeeId *response)
+  {
+    m_db.insert_employee({request->name(), request->position()});
     return Status::OK;
   }
+
   Status ListEmployees(ServerContext *context, const workers::ListEmployeesRequest *request,
-                       ServerWriter<workers::Employee> *writer) {
-    for (const workers::Employee &e : m_employee_list) {
+                       ServerWriter<workers::Employee> *writer)
+  {
+    for (const workers::Employee &e : m_employee_list)
+    {
       writer->Write(e);
     }
     return Status::OK;
   }
+
   Status GetEmployeePosition(ServerContext *context, const workers::EmployeeId *request,
-                             workers::EmployeePosition *response) {
-    return Status::OK;
-  }
-  Status GetEmployeeManager(ServerContext *context, const workers::EmployeeId *request, workers::Employee *response) {
-    return Status::OK;
-  }
-  Status SetEmployeePosition(ServerContext *context, const workers::SetEmployeePositionRequest *request,
-                             workers::SetEmployeePositionResponce *response) {
-    return Status::OK;
-  }
-  Status SetEmployeeManager(ServerContext *context, const workers::SetEmployeeManagerRequest *request,
-                            workers::SetEmployeeManagerResponce *response) {
-    return Status::OK;
-  }
-  Status DeleteEmployee(ServerContext *context, const workers::EmployeeId *request,
-                        workers::DeleteEmployeeResponce *response) {
+                             workers::EmployeePosition *response)
+  {
     return Status::OK;
   }
 
-  Status GetFeature(ServerContext *context, const Point *point, Feature *feature) override {
+  Status GetEmployeeManager(ServerContext *context, const workers::EmployeeId *request, workers::Employee *response)
+  {
+    return Status::OK;
+  }
+
+  Status SetEmployeePosition(ServerContext *context, const workers::SetEmployeePositionRequest *request,
+                             workers::SetEmployeePositionResponce *response)
+  {
+    return Status::OK;
+  }
+
+  Status SetEmployeeManager(ServerContext *context, const workers::SetEmployeeManagerRequest *request,
+                            workers::SetEmployeeManagerResponce *response)
+  {
+    return Status::OK;
+  }
+
+  Status DeleteEmployee(ServerContext *context, const workers::EmployeeId *request,
+                        workers::DeleteEmployeeResponce *response)
+  {
+    return Status::OK;
+  }
+
+  Status GetFeature(ServerContext *context, const Point *point, Feature *feature) override
+  {
     feature->set_name(GetFeatureName(*point, feature_list_));
     feature->mutable_location()->CopyFrom(*point);
     return Status::OK;
   }
 
   Status ListFeatures(ServerContext *context, const workers::Rectangle *rectangle,
-                      ServerWriter<Feature> *writer) override {
+                      ServerWriter<Feature> *writer) override
+  {
     auto lo = rectangle->lo();
     auto hi = rectangle->hi();
     long left = (min) (lo.longitude(), hi.longitude());
     long right = (max) (lo.longitude(), hi.longitude());
     long top = (max) (lo.latitude(), hi.latitude());
     long bottom = (min) (lo.latitude(), hi.latitude());
-    for (const Feature &f : feature_list_) {
+    for (const Feature &f : feature_list_)
+    {
       if (f.location().longitude() >= left && f.location().longitude() <= right && f.location().latitude() >= bottom &&
-          f.location().latitude() <= top) {
+          f.location().latitude() <= top)
+      {
         writer->Write(f);
       }
     }
     return Status::OK;
   }
 
-  Status RecordRoute(ServerContext *context, ServerReader<Point> *reader, RouteSummary *summary) override {
+  Status RecordRoute(ServerContext *context, ServerReader<Point> *reader, RouteSummary *summary) override
+  {
     Point point;
     int point_count = 0;
     int feature_count = 0;
@@ -138,12 +164,15 @@ public:
     Point previous;
 
     system_clock::time_point start_time = system_clock::now();
-    while (reader->Read(&point)) {
+    while (reader->Read(&point))
+    {
       point_count++;
-      if (!GetFeatureName(point, feature_list_).empty()) {
+      if (!GetFeatureName(point, feature_list_).empty())
+      {
         feature_count++;
       }
-      if (point_count != 1) {
+      if (point_count != 1)
+      {
         distance += GetDistance(previous, point);
       }
       previous = point;
@@ -158,13 +187,17 @@ public:
     return Status::OK;
   }
 
-  Status RouteChat(ServerContext *context, ServerReaderWriter<RouteNote, RouteNote> *stream) override {
+  Status RouteChat(ServerContext *context, ServerReaderWriter<RouteNote, RouteNote> *stream) override
+  {
     RouteNote note;
-    while (stream->Read(&note)) {
+    while (stream->Read(&note))
+    {
       unique_lock<mutex> lock(mu_);
-      for (const RouteNote &n : received_notes_) {
+      for (const RouteNote &n : received_notes_)
+      {
         if (n.location().latitude() == note.location().latitude() &&
-            n.location().longitude() == note.location().longitude()) {
+            n.location().longitude() == note.location().longitude())
+        {
           stream->Write(n);
         }
       }
@@ -183,16 +216,17 @@ private:
 };
 
 void
-RunServer(const string &db_path) {
+RunServer(const string &db_path)
+{
   using namespace DB;
 
   string server_address("0.0.0.0:50051");
   DB::Employee e = DB::TestEmployee();
 
   auto storage = DB::initDatabase(db_path);
-
   storage.insert(e);
-  RouteGuideImpl service(storage);
+
+  RouteGuideImpl service(db_path);
   ServerBuilder builder;
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
@@ -202,7 +236,8 @@ RunServer(const string &db_path) {
 }
 
 int
-main(int argc, char **argv) {
+main(int argc, char **argv)
+{
   string db = "employees.db";
   RunServer(db);
 

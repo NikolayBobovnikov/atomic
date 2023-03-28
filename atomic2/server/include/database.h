@@ -23,6 +23,8 @@ static const std::string create_managers = "CREATE TABLE managers(id INTEGER PRI
                                            "position TEXT NOT NULL);";
 
 struct Employee {
+  Employee(const std::string &_name, const std::string &_position) : name(_name), position(_position) {}
+
   size_t id;
   std::optional<size_t> manager_id;   // must map to id
   std::string name;
@@ -64,7 +66,7 @@ struct IEmployeesDb {
 };
 
 struct SQLiteDb : IEmployeesDb {
-  SQLiteDb(const Storage &db);
+  SQLiteDb(const std::string &db_path);
   void insert_employee(const Employee &e) override;
   TestEmployee get_employee(size_t emp_id) const override;
   std::vector<Employee> get_employees(size_t emp_id) const override;
@@ -74,6 +76,6 @@ struct SQLiteDb : IEmployeesDb {
   void set_employee_manager(size_t emp_id) const override;
   void delete_employee(size_t emp_id) const override;
 
-  const Storage *m_storage;
+  Storage m_storage;
 };
 }   // namespace DB

@@ -20,3 +20,4 @@ AlwaysBreakAfterReturnType: TopLevelDefinitions
 #AlignConsecutiveMacros: Consecutive
 # use \n instead of \r\n
 UseCRLF: false
+BreakBeforeBraces: Allman
